@@ -388,9 +388,9 @@ def update_annotations():
                 taxonomy = line.split('\t')[2].rstrip()
                 if taxonomy in mapping_dict.keys():
                     line = line.split('\t')[0].rstrip()+ '\t' + line.split('\t')[1].rstrip()+ '\t' + mapping_dict[taxonomy]
-                    out_file.write(line.rstrip())
+                    out_file.write(line)
                 else:
-                    out_file.write(line.rstrip())
+                    out_file.write(line)
     os.rename(temp_file, PROFILE_FILE)
     
     
