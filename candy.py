@@ -14,6 +14,9 @@ from time import sleep
 #primer_file = "XEEPsmored-assaylist3.txt"
 
 ###############################################################################################
+__createDB__ = True
+__update_annotations__ = False
+
 INPUT_FILE = None
 
 __use_output_prefix__ = False
@@ -28,6 +31,7 @@ ADD_SEQS_FILES = None
 __add_alleles__ = False
 ALLELES_FILE = None
 
+PROFILE_FILE = None
 THREADS = 1
 
 
@@ -255,10 +259,6 @@ def fix_headers(pimer_dict):
     with open(mapping_file, 'r') as in1_file:
         for line in in1_file:
             mapping_dict[line.split('\t')[0]] = line.split('\t')[1]
-    # for key in mapping_dict:
-        # print("Key: " + key + "\nValue: " + mapping_dict[key]  + '\n\n')
-    
-    
     
     print("#######################################################\nRelabeling representative seqeunces and creating mega FASTA.\n#######################################################\n")
     with open(taxonomy_check_file, 'w') as out_file:
@@ -373,7 +373,28 @@ def create_smored_files(primer_dict):
     cwd = os.getcwd()
     with open(config_file, 'w') as out3_handle:
         out3_handle.write("[loci]\namplicon\t" +cwd +"/" + amplicon_file +"\n[profile]\nprofile\t" +cwd+ "/" +profile_file+"\n")
-            
+
+def update_annotations():
+    profile_file = PROFILE_FILE
+    mapping_file = "virus_mapping.txt"
+    mapping_dict = {}
+    temp_file = "temp"
+    with open(mapping_file, 'r') as in1_file:
+        for line in in1_file:
+            mapping_dict[line.split('\t')[0]] = line.split('\t')[1]
+    with open(temp_file, 'w') as out_file:
+        with open(profile_file, 'r') as in2_file:
+            for line in in2_file:
+                taxonomy = line.split('\t')[2].rstrip()
+                if taxonomy in mapping_dict.keys():
+                    line = line.split('\t')[0].rstrip()+ '\t' + line.split('\t')[1].rstrip()+ '\t' + mapping_dict[taxonomy]
+                    out_file.write(line.rstrip())
+                else:
+                    out_file.write(line.rstrip())
+    os.rename(temp_file, PROFILE_FILE)
+    
+    
+    
 def clean_up(primer_dict, org_dict):
 # add a step to clean up directory to remove BLAST output, log files and derep files
     print("#######################################################\nRemoving accessory files\n#######################################################\n")
@@ -450,16 +471,19 @@ def clean_up(primer_dict, org_dict):
 try:
     sys.argv[1]
 except IndexError:
-    print("To create a new database: \n\nnew_build_db.py -i <input file> [-o <database files prefix>] [-d <directory for intermediate file>] [-g <sequences to add to database>] [-t num_threads] [-a <additional seqs to add>]\n\n")
+    print("To create a new database: \ncandy.py -i <input file> [-o <database files prefix>] [-d <directory for intermediate file>] [-g <sequences to add to database>] [-t num_threads] [-a <additional seqs to add>]\n\nTo update an existing profile file: \ncandy.py --update -p <profile file>\n\n")
     sys.exit(0)
 
 #Input arguments
-__options__, __remainders__ = getopt.getopt(sys.argv[1:], 'i:o:d:g:t:a:',[    'input=',
+__options__, __remainders__ = getopt.getopt(sys.argv[1:], 'i:o:d:g:t:a:p:',[    'input=',
     'output_prefix=',
     'intermediate_directory=',
     'pres_abs_seq=',
     'threads=',
-    'charac_seqs='])
+    'charac_seqs=',
+    'update',
+    'create',
+    'profile='])
 
 for opt, arg in __options__:
     if opt in ('-i', '--input'):
@@ -478,18 +502,27 @@ for opt, arg in __options__:
     elif opt in ('-a', '--charac_seqs'):
         __add_alleles__= True
         ALLELES_FILE = arg
+    elif opt in ('--update'):
+        __update_annotations__ = True
+        __createDB__ = False
+    elif opt in ('-p', '--profile'):
+        PROFILE_FILE = arg
+        
     
 def main():
-    read_primer_file(INPUT_FILE)
-    make_primer_file(primer_dict)
-    create_taxid_list(org_dict)
-    with Pool(int(THREADS)) as pool:
-        pool.map(blast_primers, primer_dict.keys())
-        pool.map(parse_blast_results, primer_dict.keys())
-    derep_amplicons(primer_dict)
-    fix_headers(primer_dict)
-    create_smored_files(primer_dict)
-    clean_up(primer_dict, org_dict)
+    if __createDB__ :
+        read_primer_file(INPUT_FILE)
+        make_primer_file(primer_dict)
+        create_taxid_list(org_dict)
+        with Pool(int(THREADS)) as pool:
+            pool.map(blast_primers, primer_dict.keys())
+            pool.map(parse_blast_results, primer_dict.keys())
+        derep_amplicons(primer_dict)
+        fix_headers(primer_dict)
+        create_smored_files(primer_dict)
+        clean_up(primer_dict, org_dict)
+    elif __update_annotations__:
+        update_annotations()
 if __name__ == '__main__':
     main()
 
