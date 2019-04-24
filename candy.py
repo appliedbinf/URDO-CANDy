@@ -11,31 +11,25 @@ import logging
 import json
 from time import sleep
 
-#primer_file = "XEEPsmored-assaylist3.txt"
 
 ###############################################################################################
 __createDB__ = True
 __update_annotations__ = False
-
 INPUT_FILE = None
-
 __use_output_prefix__ = False
 OUTPUT_PREFIX = None
-
-__make_intermediate_dir__ = False
-OUTPUT_DIR = None
-
+__make_intermediate_dir__ = True
+OUTPUT_DIR = subprocess.check_output('date "+%Y%m%d_%H%M"',shell=True).decode('utf-8').rstrip()
 __add_seqs__ = False
 ADD_SEQS_FILES = None
-
 __add_alleles__ = False
 ALLELES_FILE = None
-
+__virus_mapping__ = False
+MAPPING_FILE = None
 PROFILE_FILE = None
 THREADS = 1
-
-
-
+__log__=False
+LOG = ''
 
 # global primer_dict
 primer_dict = {}
@@ -44,7 +38,8 @@ org_dict = {}
 
 
 def read_primer_file(INPUT_FILE):
-    print("#######################################################\nReading input file and generating dictionaries.\n#######################################################\n")
+    msg = "Analysis: Reading input file and generating dictionaries.\n"
+    logging.debug(msg)
     primers = open(INPUT_FILE, 'r').read()
     entries = [x for x in primers.split('\n') if len(x) != 0]
     #Creates a primer dictionary
@@ -65,14 +60,14 @@ def read_primer_file(INPUT_FILE):
 
 def make_primer_file(primer_dict):
     #for each primer create a fasta file with the forward and reverse compliment primers
-    print("#######################################################\nCreating primer files.\n#######################################################\n")
+    logging.debug("Analysis: Creating primer files.\n")
     for key in primer_dict:
         primer_name = org_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
         file_out = "{}_primers.fasta".format(primer_name)
         if os.path.exists(file_out) and os.path.isfile(file_out):
             os.remove(file_out)
         with open(file_out, 'a') as out_handle:
-            print("Creating primer file for: ", primer_name)
+            logging.debug(f"Creating primer file for:{primer_name} ")
             out_handle.write(">{primer_name}_F\n{forward_primer_seq}\n>{primer_name}_RC\n{reverse_comp_primer_seq}\n".format(**primer_dict[key]))
 
 
@@ -96,15 +91,34 @@ def blast_primers(key):
     primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
     if os.path.exists(f"{primer_name}_blast.results") and os.path.isfile(f"{primer_name}_blast.results"):
         os.remove(f"{primer_name}_blast.results")
-
-    blast_cmd = f"/storage/blastdb/v5/ncbi-blast-2.8.1+/bin/blastn -query {primer_name}_primers.fasta -db /storage/blastdb/v5/nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10| sort -k14n > {primer_name}_blast.results"
+    '''
+    BLAST needs updates
+    '''
+    blast_cmd = f"blastn -query {primer_name}_primers.fasta -db /storage/blastdb/v5/nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out    {primer_name}_blast.results"
     print(blast_cmd)
-    os.system(blast_cmd)
+    try:
+        subprocess.check_output(blast_cmd, shell=True)
+    except subprocess.CalledProcessError as blastError:
+        print("BLAST failed to run with error:")
+        print(blastError)
+        print(f"BLASTDB is currently set to: '{os.environ['BLASTDB']}'")
+        print("Please make sure this points to folder containing V5 BLAST database named 'nt_v5'")
+        raise Exception()
+    sort_cmd = f"sort -k14n {primer_name}_blast.results -o {primer_name}_blast.results"
+    try:
+        subprocess.call(sort_cmd)
+    except subprocess.CalledProcessError as sortError:
+        print("Sorting BLAST results failed with error")
+        print(sortError)
+        exit(1)
 
 
 def extract_subsequence(genome, start, stop):
     thisStart = min(start, stop)
     thisStop  = max(start, stop)
+    '''
+    BLAST needs updates
+    '''
     extract_cmd = f"/storage/blastdb/v5/ncbi-blast-2.8.1+/bin/blastdbcmd -db /storage/blastdb/v5/nt_v5 -entry {genome} -range {thisStart}-{thisStop}"
     extract_seq = subprocess.check_output(extract_cmd, shell=True,universal_newlines=True)
     header,seq = extract_seq.split('\n',1)
@@ -218,13 +232,7 @@ def parse_blast_results(key):
                         # the only time you will be here is when your primers are either on different strand or too close to each other
                         # print("Strand mismatch.  You shouldn't see this message repeated consecutively multiple times.")
                         continue
-                        #pass
-                    # move the appropriate pointers if you are close to the end so you are not stuck
-                    # if rev_index == len(results[genome]['R'])-1:
-                    #         fwd_index += 1
-                    # if fwd_index == len(results[genome]['F'])-1:
-                    #         rev_index += 1
-
+                        
                 # if no hits are found for the current fwd_index, then increment it
                 fwd_index += 1
 
@@ -253,45 +261,20 @@ def derep_amplicons(primer_dict):
 
         
 def fix_headers(pimer_dict):
-    taxonomy_check_file = "all_with_taxonomy.fasta"
-    mapping_file = "virus_mapping.txt"
-    mapping_dict = {}
-    with open(mapping_file, 'r') as in1_file:
-        for line in in1_file:
-            mapping_dict[line.split('\t')[0]] = line.split('\t')[1]
-    
     print("#######################################################\nRelabeling representative seqeunces and creating mega FASTA.\n#######################################################\n")
-    with open(taxonomy_check_file, 'w') as out_file:
-        for key in primer_dict:
-            primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
-            org_name = re.sub(pattern = ' ', string = primer_dict[key]['organism'].rstrip(), repl='_')
-            derep_file = primer_name + "_derep_amplicons.fasta"
-            #taxonomy_check_file = primer_name + "_tax.fasta"
-            with open(derep_file, 'r') as in_file:
-                if  re.match("bacteria",primer_dict[key]['taxa'], flags=re.I):
-                    #print("------------------------------------------")
-                    #print("Checking taxonomy for: " + primer_name)
-                    for line in in_file:
-                        if line.startswith(">"):
-                            if "Not found" in line:
-                               out_file.write(">" + primer_name + "\n")
-                            else:
-                                line = line.split("s:")[1]
-                                out_file.write(">" + line)
-                                
-                                # if ";ss:" in line:
-                                    # line = line.split("ss:")[0]
-                                    # out_file.write(">" + line)
-                                # if ";" in line:
-                                    # line = line.split(";")[0]
-                                    # out_file.write(">" + line)
-                                # else:
-                                    # out_file.write(">" + line)
-                            # print(line.rstrip())
-                        else:
-                            out_file.write(line)
-                            
-                elif re.match("virus",primer_dict[key]['taxa'], flags=re.I):
+    taxonomy_check_file = "all_with_taxonomy.fasta"
+    if __virus_mapping__:
+        mapping_file = MAPPING_FILE
+        mapping_dict = {}
+        with open(mapping_file, 'r') as in1_file:
+            for line in in1_file:
+                mapping_dict[line.split('\t')[0]] = line.split('\t')[1]
+        with open(taxonomy_check_file, 'w') as out_file:
+            for key in primer_dict:
+                primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
+                org_name = re.sub(pattern = ' ', string = primer_dict[key]['organism'].rstrip(), repl='_')
+                derep_file = primer_name + "_derep_amplicons.fasta"
+                with open(derep_file, 'r') as in_file:                                
                     for line in in_file:
                         if line.startswith(">"):
                             line = line.split("s:")[1].rstrip()
@@ -299,7 +282,19 @@ def fix_headers(pimer_dict):
                                 out_file.write(">" + mapping_dict[line])
                             else:
                                 out_file.write(">" + line)
-                            # out_file.write(">" + org_name + "\n")
+                        else:
+                            out_file.write(line)
+    else:
+        with open(taxonomy_check_file, 'w') as out_file:
+            for key in primer_dict:
+                primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
+                org_name = re.sub(pattern = ' ', string = primer_dict[key]['organism'].rstrip(), repl='_')
+                derep_file = primer_name + "_derep_amplicons.fasta"
+                with open(derep_file, 'r') as in_file:                                
+                    for line in in_file:
+                        if line.startswith(">"):
+                            line = line.split("s:")[1].rstrip()
+                            out_file.write(">" + line)
                         else:
                             out_file.write(line)
     out_file.close()
@@ -400,7 +395,7 @@ def clean_up(primer_dict, org_dict):
     print("#######################################################\nRemoving accessory files\n#######################################################\n")
     if __make_intermediate_dir__ :
         if os.path.isdir(OUTPUT_DIR):
-            os.remove(OUTPUT_DIR)
+            shutil.rmtree(OUTPUT_DIR)
         os.mkdir(OUTPUT_DIR)
         for key in primer_dict:
             primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
@@ -465,17 +460,31 @@ def clean_up(primer_dict, org_dict):
             os.remove("taxonomy_derep.fasta")
         except:
             pass
+            
+def check_inputs():
+    blast_version = subprocess.check_output('blastn -version',shell=True).decode('utf-8').rstrip().split('\n')[0].split(' ')[1]
+    if blast_version != '2.8.1+':
+        blast_path = os.path.dirname(subprocess.check_output('which blastn',shell=True).decode('utf-8').rstrip())
+        print("You must have NCBI BLAST+ version 2.8.1 installed and in your PATH")
+        print(f"You have BLAST version: {blast_version}")
+        print(f"If BLAST+ 2.8.1 is in your PATH, make sure it appears before {blast_path}")
+    # exit()
 ############################################################################################
 #Program execution starts here
-
+HELP = "To create a new database: \ncandy.py -i <input file> [-o <database files prefix>] [-d <directory for intermediate file>] [-g <sequences to add to database>] [-t num_threads] [-a <additional seqs to add>]\n\nTo update an existing profile file: \ncandy.py --update -p <profile file>\n\n"
 try:
     sys.argv[1]
 except IndexError:
-    print("To create a new database: \ncandy.py -i <input file> [-o <database files prefix>] [-d <directory for intermediate file>] [-g <sequences to add to database>] [-t num_threads] [-a <additional seqs to add>]\n\nTo update an existing profile file: \ncandy.py --update -p <profile file>\n\n")
+    print(HELP)
     sys.exit(0)
-
+#######Checks for write permission in the directory, exits if user does not have right permissions
+    try:
+        testfile = tempfile.TemporaryFile(dir = cwd)
+        testfile.close()
+    except IOError:
+        sys.exit('You do not have write permission in this directory')
 #Input arguments
-__options__, __remainders__ = getopt.getopt(sys.argv[1:], 'i:o:d:g:t:a:p:',[    'input=',
+__options__, __remainders__ = getopt.getopt(sys.argv[1:], 'i:o:d:g:t:a:p:m:l:h',[    'input=',
     'output_prefix=',
     'intermediate_directory=',
     'pres_abs_seq=',
@@ -483,9 +492,15 @@ __options__, __remainders__ = getopt.getopt(sys.argv[1:], 'i:o:d:g:t:a:p:',[    
     'charac_seqs=',
     'update',
     'create',
-    'profile='])
+    'profile=',
+    'mapping=',
+    'log=',
+    'help'])
 
 for opt, arg in __options__:
+    if opt in ('-h', '-help'):
+        print(HELP)
+        exit()
     if opt in ('-i', '--input'):
         INPUT_FILE = arg
     elif opt in ('-o','--output_prefix'):
@@ -498,7 +513,11 @@ for opt, arg in __options__:
         __add_seqs__ = True
         ADD_SEQS_FILES = arg
     elif opt in ('-t', '--threads'):
-        THREADS = arg
+        try:
+            THREADS = int(arg)
+        except ValueError:
+            print("Error: Enter an interger value for threads.")
+            sys.exit(0)
     elif opt in ('-a', '--charac_seqs'):
         __add_alleles__= True
         ALLELES_FILE = arg
@@ -507,10 +526,20 @@ for opt, arg in __options__:
         __createDB__ = False
     elif opt in ('-p', '--profile'):
         PROFILE_FILE = arg
+    elif opt in ('-m', '--mapping'):
+        __virus_mapping__ = True
+        MAPPING_FILE = arg
+    elif opt in ('-l','--log'):
+        __log__= True
+        LOG = arg
         
-    
+        
+
+import tempfile
+import errno    
 def main():
-    if __createDB__ :
+    check_inputs()
+    if __createDB__ :     
         read_primer_file(INPUT_FILE)
         make_primer_file(primer_dict)
         create_taxid_list(org_dict)
@@ -526,3 +555,7 @@ def main():
 if __name__ == '__main__':
     main()
 
+###Checks needed
+#Check user's blast version and blast database version blastdbcmd -version |head -1 |cut -d':' -f2 |sed 's/\+//' | sed 's/^\s//'
+# get path to blastdatabase
+#make newest blast cmd
