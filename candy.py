@@ -94,7 +94,7 @@ def blast_primers(key):
     '''
     BLAST needs updates
     '''
-    blast_cmd = f"blastn -query {primer_name}_primers.fasta -db /storage/blastdb/v5/nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out    {primer_name}_blast.results"
+    blast_cmd = f"blastn -query {primer_name}_primers.fasta -db nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out {primer_name}_blast.results"
     print(blast_cmd)
     try:
         subprocess.check_output(blast_cmd, shell=True)
@@ -106,7 +106,7 @@ def blast_primers(key):
         raise Exception()
     sort_cmd = f"sort -k14n {primer_name}_blast.results -o {primer_name}_blast.results"
     try:
-        subprocess.call(sort_cmd)
+        subprocess.call(sort_cmd, shell=True)
     except subprocess.CalledProcessError as sortError:
         print("Sorting BLAST results failed with error")
         print(sortError)
@@ -118,8 +118,10 @@ def extract_subsequence(genome, start, stop):
     thisStop  = max(start, stop)
     '''
     BLAST needs updates
+    /storage/blastdb/v5/ncbi-blast-2.8.1+/bin/
+    /storage/blastdb/v5/
     '''
-    extract_cmd = f"/storage/blastdb/v5/ncbi-blast-2.8.1+/bin/blastdbcmd -db /storage/blastdb/v5/nt_v5 -entry {genome} -range {thisStart}-{thisStop}"
+    extract_cmd = f"blastdbcmd -db nt_v5 -entry {genome} -range {thisStart}-{thisStop}"
     extract_seq = subprocess.check_output(extract_cmd, shell=True,universal_newlines=True)
     header,seq = extract_seq.split('\n',1)
     seq = seq.rstrip()
@@ -428,38 +430,7 @@ def clean_up(primer_dict, org_dict):
             shutil.move("taxonomy_derep.fasta", OUTPUT_DIR)
         except:
             pass 
-    else:
-        for key in primer_dict:
-            primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
-            try:
-                os.remove(f"{primer_name}_primers.fasta")
-            except:
-                pass
-            try:
-                os.remove(f"{primer_name}_blast.results")
-            except:
-                pass
-            try:
-                os.remove(f"{primer_name}_amplicons.fasta")
-            except:
-                pass
-            try:
-                os.remove(f"{primer_name}_derep_amplicons.fasta")
-            except:
-                pass
-        for key in org_dict:
-            try:
-                os.remove(f"{org_dict[key]['taxid']}_taxid.txt")
-            except:
-                pass
-        try:
-            os.remove("all_with_taxonomy.fasta")
-        except:
-            pass
-        try:
-            os.remove("taxonomy_derep.fasta")
-        except:
-            pass
+    
             
 def check_inputs():
     blast_version = subprocess.check_output('blastn -version',shell=True).decode('utf-8').rstrip().split('\n')[0].split(' ')[1]
@@ -471,7 +442,7 @@ def check_inputs():
     # exit()
 ############################################################################################
 #Program execution starts here
-HELP = "To create a new database: \ncandy.py -i <input file> [-o <database files prefix>] [-d <directory for intermediate file>] [-g <sequences to add to database>] [-t num_threads] [-a <additional seqs to add>]\n\nTo update an existing profile file: \ncandy.py --update -p <profile file>\n\n"
+HELP = "To create a new database: \ncandy.py -i <input file> [-o <database files prefix>] [-d <directory for intermediate file>] [-g <additional presence/absence>] [-m <mapping file>] [-t num_threads] [-a <additional sample characterization seqs>]\n\nTo update an existing profile file: \ncandy.py --update -p <profile file> -m <mapping file> \n\n"
 try:
     sys.argv[1]
 except IndexError:
