@@ -18,8 +18,8 @@ __update_annotations__ = False
 INPUT_FILE = None
 __use_output_prefix__ = False
 OUTPUT_PREFIX = None
-__make_intermediate_dir__ = True
-OUTPUT_DIR = subprocess.check_output('date "+%Y%m%d_%H%M"',shell=True).decode('utf-8').rstrip()
+__make_intermediate_dir__ = False
+OUTPUT_DIR = None
 __add_seqs__ = False
 ADD_SEQS_FILES = None
 __add_alleles__ = False
@@ -38,7 +38,7 @@ org_dict = {}
 
 
 def read_primer_file(INPUT_FILE):
-    msg = "Analysis: Reading input file and generating dictionaries.\n"
+    msg = "Analysis: Reading input file and generating dictionaries."
     logging.debug(msg)
     primers = open(INPUT_FILE, 'r').read()
     entries = [x for x in primers.split('\n') if len(x) != 0]
@@ -60,7 +60,7 @@ def read_primer_file(INPUT_FILE):
 
 def make_primer_file(primer_dict):
     #for each primer create a fasta file with the forward and reverse compliment primers
-    logging.debug("Analysis: Creating primer files.\n")
+    logging.debug("Analysis: Creating primer files.")
     for key in primer_dict:
         primer_name = org_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
         file_out = "{}_primers.fasta".format(primer_name)
@@ -72,30 +72,29 @@ def make_primer_file(primer_dict):
 
 
 def create_taxid_list(org_dict):
-    print("#######################################################\nCreating lists of taxa IDs\n#######################################################\n")
+    logging.debug("Creating lists of taxa IDs")
     for key in org_dict:
         org_name = org_dict[key]['org_name']
         if os.path.isfile(f"{org_dict[key]['taxid'].replace(',','.')}_taxid.txt"):
-            print(f"Taxid list already downloaded for {org_dict[key]['taxid']}, moving to next organism.")
+            logging.debug(f"Taxid list already downloaded for {org_dict[key]['taxid']}, moving to next organism.")
         else:
             get_taxid_cmd = f"taxonkit list --ids {org_dict[key]['taxid']} --indent \"\" | sed '/^$/d' > {org_dict[key]['taxid'].replace(',','.')}_taxid.txt"
-            print(get_taxid_cmd)
+            logging.debug(get_taxid_cmd)
             os.system(get_taxid_cmd)
 
             
 def blast_primers(key):
     #blast primer files against genome database
-    #print("#######################################################\nStarting primer BLAST\n#######################################################\n")
-    #for key in primer_dict:
+    logging.debug("Starting primer BLAST")
     org_name = re.sub(pattern = ' ', string = primer_dict[key]['organism'].rstrip(), repl='_')
     primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
     if os.path.exists(f"{primer_name}_blast.results") and os.path.isfile(f"{primer_name}_blast.results"):
         os.remove(f"{primer_name}_blast.results")
     '''
-    BLAST needs updates
+    Figure out how to handle errors
     '''
     blast_cmd = f"blastn -query {primer_name}_primers.fasta -db nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out {primer_name}_blast.results"
-    print(blast_cmd)
+    #print(blast_cmd)
     try:
         subprocess.check_output(blast_cmd, shell=True)
     except subprocess.CalledProcessError as blastError:
@@ -295,7 +294,7 @@ def fix_headers(pimer_dict):
                 with open(derep_file, 'r') as in_file:                                
                     for line in in_file:
                         if line.startswith(">"):
-                            line = line.split("s:")[1].rstrip()
+                            line = line.split("s:")[1]
                             out_file.write(">" + line)
                         else:
                             out_file.write(line)
@@ -399,50 +398,69 @@ def clean_up(primer_dict, org_dict):
         if os.path.isdir(OUTPUT_DIR):
             shutil.rmtree(OUTPUT_DIR)
         os.mkdir(OUTPUT_DIR)
-        for key in primer_dict:
-            primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
-            try:
-                shutil.move(f"{primer_name}_primers.fasta", OUTPUT_DIR)
-            except:
-                pass
-            try:
-                shutil.move(f"{primer_name}_blast.results", OUTPUT_DIR)
-            except:
-                pass
-            try:
-                shutil.move(f"{primer_name}_amplicons.fasta", OUTPUT_DIR)
-            except:
-                pass
-            try:
-                shutil.move(f"{primer_name}_derep_amplicons.fasta", OUTPUT_DIR)
-            except:
-                pass
-        for key in org_dict:
-            try:
-                shutil.move(f"{org_dict[key]['taxid']}_taxid.txt", OUTPUT_DIR)
-            except:
-                pass
+    else:
+        OUTPUT_DIR = subprocess.check_output('date "+%Y%m%d_%H%M"',shell=True).decode('utf-8').rstrip()
+        if os.path.isdir(OUTPUT_DIR):
+            shutil.rmtree(OUTPUT_DIR)
+        os.mkdir(OUTPUT_DIR)
+
+    for key in primer_dict:
+        primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
         try:
-            shutil.move("all_with_taxonomy.fasta", OUTPUT_DIR)
+            shutil.move(f"{primer_name}_primers.fasta", OUTPUT_DIR)
         except:
             pass
         try:
-            shutil.move("taxonomy_derep.fasta", OUTPUT_DIR)
+            shutil.move(f"{primer_name}_blast.results", OUTPUT_DIR)
         except:
-            pass 
+            pass
+        try:
+            shutil.move(f"{primer_name}_amplicons.fasta", OUTPUT_DIR)
+        except:
+            pass
+        try:
+            shutil.move(f"{primer_name}_derep_amplicons.fasta", OUTPUT_DIR)
+        except:
+            pass
+    for key in org_dict:
+        try:
+            shutil.move(f"{org_dict[key]['taxid']}_taxid.txt", OUTPUT_DIR)
+        except:
+            pass
+    try:
+        shutil.move("all_with_taxonomy.fasta", OUTPUT_DIR)
+    except:
+        pass
+    try:
+        shutil.move("taxonomy_derep.fasta", OUTPUT_DIR)
+    except:
+        pass 
     
-            
-def check_inputs():
-    blast_version = subprocess.check_output('blastn -version',shell=True).decode('utf-8').rstrip().split('\n')[0].split(' ')[1]
-    if blast_version != '2.8.1+':
-        blast_path = os.path.dirname(subprocess.check_output('which blastn',shell=True).decode('utf-8').rstrip())
-        print("You must have NCBI BLAST+ version 2.8.1 installed and in your PATH")
-        print(f"You have BLAST version: {blast_version}")
-        print(f"If BLAST+ 2.8.1 is in your PATH, make sure it appears before {blast_path}")
+def create_log_file():
+    if __log__:
+        logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+        sys.stderr.write(f"Writing log file to: {LOG}\n")
+    else:
+        LOG=subprocess.check_output('date "+%Y%m%d_%H%M"',shell=True).decode('utf-8').rstrip() +'.log'
+        logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+        sys.stderr.write(f"Writing log file to: {LOG}\n")
+
+#def check_arguments():
+
+def check_version():
+    if __createDB__:
+        #if not INPUT_FILE:
+
+        blast_version = subprocess.check_output('blastn -version',shell=True).decode('utf-8').rstrip().split('\n')[0].split(' ')[1]
+        if blast_version != '2.8.1+':
+            blast_path = os.path.dirname(subprocess.check_output('which blastn',shell=True).decode('utf-8').rstrip())
+            print("You must have NCBI BLAST+ version 2.8.1 installed and in your PATH")
+            print(f"You have BLAST version: {blast_version}")
+            print(f"If BLAST+ 2.8.1 is in your PATH, make sure it appears before {blast_path}")
     # exit()
 ############################################################################################
 #Program execution starts here
-HELP = "To create a new database: \ncandy.py -i <input file> [-o <database files prefix>] [-d <directory for intermediate file>] [-g <additional presence/absence>] [-m <mapping file>] [-t num_threads] [-a <additional sample characterization seqs>]\n\nTo update an existing profile file: \ncandy.py --update -p <profile file> -m <mapping file> \n\n"
+HELP = "To create a new database: \ncandy.py -i <primer table> [-o <prefix for output files>] [-d <directory for intermediate file>] [-g <additional presence/absence seqs>] [-a <additional characterization seqs>] [-t num threads] [-m <mapping file>]  \n\nTo update an existing profile file: \ncandy.py --update -p <profile file> -m <mapping file> \n\n"
 try:
     sys.argv[1]
 except IndexError:
@@ -509,7 +527,8 @@ for opt, arg in __options__:
 import tempfile
 import errno    
 def main():
-    check_inputs()
+    create_log_file()
+    check_version()
     if __createDB__ :     
         read_primer_file(INPUT_FILE)
         make_primer_file(primer_dict)
