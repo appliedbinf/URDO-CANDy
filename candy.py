@@ -38,8 +38,7 @@ org_dict = {}
 
 
 def read_primer_file(INPUT_FILE):
-    msg = "Analysis: Reading input file and generating dictionaries."
-    logging.debug(msg)
+    logging.debug("Analysis: Reading input file and generating dictionaries.")
     primers = open(INPUT_FILE, 'r').read()
     entries = [x for x in primers.split('\n') if len(x) != 0]
     #Creates a primer dictionary
@@ -72,54 +71,52 @@ def make_primer_file(primer_dict):
 
 
 def create_taxid_list(org_dict):
-    logging.debug("Creating lists of taxa IDs")
+    logging.debug("Analysis: Creating lists of taxa IDs")
     for key in org_dict:
         org_name = org_dict[key]['org_name']
         if os.path.isfile(f"{org_dict[key]['taxid'].replace(',','.')}_taxid.txt"):
             logging.debug(f"Taxid list already downloaded for {org_dict[key]['taxid']}, moving to next organism.")
         else:
-            get_taxid_cmd = f"taxonkit list --ids {org_dict[key]['taxid']} --indent \"\" | sed '/^$/d' > {org_dict[key]['taxid'].replace(',','.')}_taxid.txt"
-            logging.debug(get_taxid_cmd)
-            os.system(get_taxid_cmd)
+            try:
+                get_taxid_cmd = f"taxonkit list --ids {org_dict[key]['taxid']} --indent \"\" -o {org_dict[key]['taxid'].replace(',','.')}_taxid.txt"
+                logging.debug(f"Analysis: Creating list of taxa ids for: {org_name}")
+                subprocess.call([get_taxid_cmd], shell=True)
+            except subprocess.CalledProcessError as TE:
+                logging.error(f"ERROR: Taxonkit unable to run with error: {TE}")
 
-            
+            #     taxid_pipes = subprocess.Popen(get_taxid_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            #     std_out, std_err = taxid_pipes.communicate()
+            #     logging.debug(f"{std_out.decode('utf-8')}{std_err.decode('utf-8')}")
+            # except subprocess.CalledProcessError as subprocess_error:
+            #     logging.error(f"Could not download taxid list for: {org_dict[key]['taxid']}")
+            #     logging.error(f"ERROR: {subprocess_error}")
+            #     sys.exit(f"Could not download taxid for: {org_dict[key]}")
+
+            taxid_cmd2 = f"sed -i '/^$/d' {org_dict[key]['taxid'].replace(',','.')}_taxid.txt"
+            subprocess.call([taxid_cmd2], shell=True)
 def blast_primers(key):
     #blast primer files against genome database
-    logging.debug("Starting primer BLAST")
+    logging.debug("Analysis: Starting primer BLAST")
     org_name = re.sub(pattern = ' ', string = primer_dict[key]['organism'].rstrip(), repl='_')
     primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
     if os.path.exists(f"{primer_name}_blast.results") and os.path.isfile(f"{primer_name}_blast.results"):
         os.remove(f"{primer_name}_blast.results")
-    '''
-    Figure out how to handle errors
-    '''
-    blast_cmd = f"blastn -query {primer_name}_primers.fasta -db nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out {primer_name}_blast.results"
-    #print(blast_cmd)
     try:
-        subprocess.check_output(blast_cmd, shell=True)
-    except subprocess.CalledProcessError as blastError:
-        print("BLAST failed to run with error:")
-        print(blastError)
-        print(f"BLASTDB is currently set to: '{os.environ['BLASTDB']}'")
-        print("Please make sure this points to folder containing V5 BLAST database named 'nt_v5'")
-        raise Exception()
+        blast_cmd = f"blastn -query {primer_name}_primers.fasta -db nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out {primer_name}_blast.results"
+        logging.debug(f"Analysis: \n{blast_cmd}")
+        blast_pipes = subprocess.Popen(blast_cmd, shell=True,  stderr=subprocess.PIPE)
+        std_err = blast_pipes.communicate()
+    except subprocess.CalledProcessError as subprocess_error:
+        logging.error()
+
     sort_cmd = f"sort -k14n {primer_name}_blast.results -o {primer_name}_blast.results"
-    try:
-        subprocess.call(sort_cmd, shell=True)
-    except subprocess.CalledProcessError as sortError:
-        print("Sorting BLAST results failed with error")
-        print(sortError)
-        exit(1)
+    subprocess.call(sort_cmd, shell=True)
 
 
 def extract_subsequence(genome, start, stop):
     thisStart = min(start, stop)
     thisStop  = max(start, stop)
-    '''
-    BLAST needs updates
-    /storage/blastdb/v5/ncbi-blast-2.8.1+/bin/
-    /storage/blastdb/v5/
-    '''
+
     extract_cmd = f"blastdbcmd -db nt_v5 -entry {genome} -range {thisStart}-{thisStop}"
     extract_seq = subprocess.check_output(extract_cmd, shell=True,universal_newlines=True)
     header,seq = extract_seq.split('\n',1)
@@ -136,8 +133,6 @@ def extract_subsequence(genome, start, stop):
 
 def parse_blast_results(key):
     #for each blast results file create a results dictionary, each entry is a genome hit
-    #print("#######################################################\nGenerating amplicon files from BLAST results\n#######################################################\n")
-    #for key in primer_dict:
     count = 0
     # results will be a 4-dimensional variable that will store sorted subject genomic positions as follows
     # Level 1: list - which genome the hit was found
@@ -150,13 +145,13 @@ def parse_blast_results(key):
     blast_file_name = primer_name + "_blast.results"
     amplicon_file = primer_name + "_amplicons.fasta"
 
-    print("Creating amplicon file for: " + primer_name)
+    logging.debug(f"Creating amplicon file for: {primer_name}")
 
     if os.path.exists(amplicon_file) and os.path.isfile(amplicon_file):
         os.remove(amplicon_file)
 
     with open(amplicon_file, 'w') as out_handle:
-        print("Opening amplicon file:"+amplicon_file)
+        #print("Opening amplicon file:"+amplicon_file)
         # read the blast file
         with open(blast_file_name, 'r') as in_handle:
             for line in in_handle:
@@ -247,7 +242,6 @@ def rev_comp(dna):
         
 def derep_amplicons(primer_dict):
     #this fucntion runs vsearch cluster to remove identical amplicons
-    print("#######################################################\nDereplicating amplicon files\n#######################################################\n")
     for key in primer_dict:
         primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
         amplicon_file = primer_name + "_amplicons.fasta"
@@ -256,13 +250,15 @@ def derep_amplicons(primer_dict):
         if os.path.exists(derep_file) and os.path.isfile(derep_file):
             os.remove(derep_file)
 
-        print("Dereplicating amplicons for: " + primer_name)
-        dereplicate_cmd = f'vsearch --derep_fulllength {amplicon_file} --strand both --fasta_width 0 --notrunclabels --output {derep_file}'
-        os.system(dereplicate_cmd)
+        logging.debug(f"Dereplicating amplicons for: {primer_name}")
+        dereplicate_cmd = f"vsearch --derep_fulllength {amplicon_file} --strand both --fasta_width 0 --notrunclabels --output {derep_file}".split(" ")
+        subprocess.run(dereplicate_cmd, stderr=subprocess.DEVNULL)
+        
+        #os.system(dereplicate_cmd)
 
         
 def fix_headers(pimer_dict):
-    print("#######################################################\nRelabeling representative seqeunces and creating mega FASTA.\n#######################################################\n")
+    logging.debug("Analysis: Relabeling representative seqeunces and combing amplicons into one file")
     taxonomy_check_file = "all_with_taxonomy.fasta"
     if __virus_mapping__:
         mapping_file = MAPPING_FILE
@@ -299,13 +295,15 @@ def fix_headers(pimer_dict):
                         else:
                             out_file.write(line)
     out_file.close()
-    derep_all_cmd = f"vsearch --derep_fulllength {taxonomy_check_file} --output taxonomy_derep.fasta --fasta_width 0 --strand both --notrunclabels --minseqlength 80"
-    os.system(derep_all_cmd)
+    derep_all_cmd = f"vsearch --derep_fulllength {taxonomy_check_file} --output taxonomy_derep.fasta --fasta_width 0 --strand both --notrunclabels --minseqlength 80".split(" ")
+    logging.debug("Analysis: Dereplicating combined amplicon file")
+    subprocess.run(derep_all_cmd, stderr=subprocess.DEVNULL)
+    #os.system(derep_all_cmd)
 
 final_gm_count = 0
 def create_smored_files(primer_dict):
     #to remove seqeunces with n reads in all_with_taxonomy.fasta
-    print("#######################################################\nGenerating SMORE'D database files.\n#######################################################\n")
+    logging.debug("Analysis: Generating SMORE'D database files.")
     taxonomy_check_file = "taxonomy_derep.fasta"
     taxonomy_file = "taxonomy_ready.fasta"
     fix_taxonomy_check_cmd = f"sed ':a;N;$!ba;s/\n[^>]/PLACEHOLDER/g' {taxonomy_check_file} |grep -v 'nnn' |sed 's/PLACEHOLDER/\n/' > {taxonomy_file}"
@@ -393,7 +391,6 @@ def update_annotations():
     
 def clean_up(primer_dict, org_dict):
 # add a step to clean up directory to remove BLAST output, log files and derep files
-    print("#######################################################\nRemoving accessory files\n#######################################################\n")
     if __make_intermediate_dir__ :
         if os.path.isdir(OUTPUT_DIR):
             shutil.rmtree(OUTPUT_DIR)
@@ -403,7 +400,7 @@ def clean_up(primer_dict, org_dict):
         if os.path.isdir(OUTPUT_DIR):
             shutil.rmtree(OUTPUT_DIR)
         os.mkdir(OUTPUT_DIR)
-
+    logging.debug(f"Moving accessory file to {OUTPUT_DIR}")
     for key in primer_dict:
         primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
         try:
@@ -438,26 +435,59 @@ def clean_up(primer_dict, org_dict):
     
 def create_log_file():
     if __log__:
-        logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-        sys.stderr.write(f"Writing log file to: {LOG}\n")
+        logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(levelname)s:%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+        sys.stderr.write(f"\nWriting log file to: {LOG}\n")
     else:
         LOG=subprocess.check_output('date "+%Y%m%d_%H%M"',shell=True).decode('utf-8').rstrip() +'.log'
-        logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-        sys.stderr.write(f"Writing log file to: {LOG}\n")
+        logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(levelname)s:%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+        sys.stderr.write(f"\nWriting log file to: {LOG}\n")
 
 #def check_arguments():
 
-def check_version():
+def check_dependencies():
     if __createDB__:
-        #if not INPUT_FILE:
+        devnull = open(os.devnull)
+        ##Checks that VSEARCH is installed
+        try:
+            subprocess.run(["vsearch"], stdout=devnull, stderr=devnull)
+        except:
+            sys.stderr.write("\n WARNING: Cannot find VSEARCH. Check that VSEARCH is downloaded and in your PATH\n\n")
+            sys.exit()
+        
+        ##Checks that taxonkit will run
+        try:
+            #check_taxonkit_cmd = "taxonkit list --ids 85755"
+            #subprocess.Popen([check_taxonkit_cmd], stdout=devnull, stderr=devnull).communicate()
+            taxonkit_proc = subprocess.Popen(["taxonkit", "list", "--ids", "85755"], stdout=devnull, stderr=subprocess.PIPE)
+            taxonkit_stderr = taxonkit_proc.communicate()
+            if taxonkit_proc.returncode != 0:
+                sys.stderr.write(f"\n {taxonkit_stderr.decode('utf8')}")
+                sys.exit()
+        except KeyboardInterrupt:
+            sys.exit()
+        except subprocess.CalledProcessError as CE: 
+            sys.stderr.write(f"\nPlease check your taxonkit installation\n{CE}")
+            sys.exit()
+        
 
-        blast_version = subprocess.check_output('blastn -version',shell=True).decode('utf-8').rstrip().split('\n')[0].split(' ')[1]
-        if blast_version != '2.8.1+':
+
+        
+        ##Checks that the correct version of BLAST is installed
+        blast_version = str(subprocess.check_output('blastn -version',shell=True).decode('utf-8').rstrip().split('\n')[0].split(' ')[1])
+        if blast_version < '2.8.1+':
             blast_path = os.path.dirname(subprocess.check_output('which blastn',shell=True).decode('utf-8').rstrip())
-            print("You must have NCBI BLAST+ version 2.8.1 installed and in your PATH")
-            print(f"You have BLAST version: {blast_version}")
+            print("WARNING: You must have NCBI BLAST+ version 2.8.1 installed and in your PATH")
+            print(f"WARNING: You have BLAST version: {blast_version}")
             print(f"If BLAST+ 2.8.1 is in your PATH, make sure it appears before {blast_path}")
-    # exit()
+            exit()
+        
+        ##Checks that the correct version of the BLAST database is installed
+        try:
+            blast_db_check_cmd = "blastdbcmd -info -db nt_v5"
+            subprocess.check_output(blast_db_check_cmd, shell=True)
+        except subprocess.CalledProcessError as blastDBerror:
+            sys.stderr.write("Make sure nt_v5 is downloaded and the ennvironmental variable 'BLASTDB' is set to the directory containing nt_v5.\n")
+            exit()
 ############################################################################################
 #Program execution starts here
 HELP = "To create a new database: \ncandy.py -i <primer table> [-o <prefix for output files>] [-d <directory for intermediate file>] [-g <additional presence/absence seqs>] [-a <additional characterization seqs>] [-t num threads] [-m <mapping file>]  \n\nTo update an existing profile file: \ncandy.py --update -p <profile file> -m <mapping file> \n\n"
@@ -527,15 +557,15 @@ for opt, arg in __options__:
 import tempfile
 import errno    
 def main():
+    check_dependencies()
     create_log_file()
-    check_version()
     if __createDB__ :     
         read_primer_file(INPUT_FILE)
-        make_primer_file(primer_dict)
-        create_taxid_list(org_dict)
-        with Pool(int(THREADS)) as pool:
-            pool.map(blast_primers, primer_dict.keys())
-            pool.map(parse_blast_results, primer_dict.keys())
+        # make_primer_file(primer_dict)
+        # create_taxid_list(org_dict)
+        # with Pool(int(THREADS)) as pool:
+        #     pool.map(blast_primers, primer_dict.keys())
+        #     pool.map(parse_blast_results, primer_dict.keys())
         derep_amplicons(primer_dict)
         fix_headers(primer_dict)
         create_smored_files(primer_dict)
