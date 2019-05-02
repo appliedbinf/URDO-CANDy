@@ -103,7 +103,7 @@ def blast_primers(key):
     if os.path.exists(f"{primer_name}_blast.results") and os.path.isfile(f"{primer_name}_blast.results"):
         os.remove(f"{primer_name}_blast.results")
     try:
-        blast_cmd = f"blastn -query {primer_name}_primers.fasta -db nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out {primer_name}_blast.results"
+        blast_cmd = f"blastn -query {primer_name}_primers.fasta -db nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid scomname qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out {primer_name}_blast.results"
         logging.debug(f"\tPROCESS: {blast_cmd}")
         blast_pipes = subprocess.Popen(blast_cmd, shell=True,  stderr=subprocess.PIPE)
         std_err = blast_pipes.communicate()
@@ -609,9 +609,9 @@ def main():
         with Pool(int(THREADS)) as pool:
             pool.map(blast_primers, primer_dict.keys())
             pool.map(parse_blast_results, primer_dict.keys())
-        derep_amplicons(primer_dict)
-        fix_headers(primer_dict)
-        create_smored_files(primer_dict)
+        # derep_amplicons(primer_dict)
+        # fix_headers(primer_dict)
+        # create_smored_files(primer_dict)
         clean_up(primer_dict, org_dict)
     elif __update_annotations__:
         update_annotations()
