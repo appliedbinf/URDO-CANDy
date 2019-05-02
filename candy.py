@@ -43,7 +43,7 @@ def read_primer_file(INPUT_FILE):
 	primers = open(INPUT_FILE, 'r').read()
 	entries = [x for x in primers.split('\n') if len(x) != 0]
 	#Creates a primer dictionary
-	primer_dict_keys = ('primer_name', 'taxid' ,'organism','taxa', 'forward_primer_seq', 'reverse_comp_primer_seq')
+	primer_dict_keys = ('primer_name', 'taxid' ,'organism','taxa', 'forward_primer_seq', 'reverse_primer_seq')
 	for entry in entries:
 		entry = entry.rstrip().split('\t')
 		if len(entry) < 6:
@@ -77,10 +77,10 @@ def make_primer_file(primer_dict):
 			os.remove(file_out)
 		with open(file_out, 'a') as out_handle:
 			logging.debug(f"\tPROCESS: Creating primer file for:{primer_name} ")
-			primer_dict[key]['reverse_comp_primer_seq'] = rev_comp(primer_dict[key]['reverse_comp_primer_seq'])
-			#print(">{primer_name}_F\n{forward_primer_seq}\n>{primer_name}_RC\n{reverse_comp_primer_seq}\n".format(**primer_dict[key]))
-			print(f"{primer_dict[key]['reverse_comp_primer_seq']}")
-			#out_handle.write(">{primer_name}_F\n{forward_primer_seq}\n>{primer_name}_RC\n{reverse_comp_primer_seq}\n".format(**primer_dict[key]))
+			primer_dict[key]['reverse_primer_seq'] = rev_comp(primer_dict[key]['reverse_primer_seq'])
+			#print(">{primer_name}_F\n{forward_primer_seq}\n>{primer_name}_R\n{reverse_primer_seq}\n".format(**primer_dict[key]))
+			#print(f"{primer_dict[key]['reverse_primer_seq']}")
+			out_handle.write(">{primer_name}_F\n{forward_primer_seq}\n>{primer_name}_R\n{reverse_primer_seq}\n".format(**primer_dict[key]))
 
 
 def create_taxid_list(org_dict):
@@ -184,7 +184,7 @@ def parse_blast_results(key):
 							results[col[1]]['F'] = list()
 
 						results[col[1]]['F'].append([int(col[13]), int(col[14]), col[15]])
-					elif col[0].endswith('_RC'):
+					elif col[0].endswith('_R'):
 						if 'R' not in results[col[1]]:
 							results[col[1]]['R'] = list()
 
