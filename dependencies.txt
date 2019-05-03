@@ -1,0 +1,4 @@
+VSEARCH 2.4.3
+Taxonkit v0.3.0
+BLAST+2.8.1
+
