@@ -39,6 +39,12 @@ org_dict = {}
 
 
 def read_primer_file(INPUT_FILE):
+	"""
+	Input: primer file, 6-column tab-delimited, [1. Primer name, 2. Target organism taxid(can be more than one but must be comma sep, 3. Target organism (never actually used by script), 4. Virus/Bacteria category, 5. Forward primer seqeunce, 6. reverse primer sequence]
+	Output: primer_dict , org_dict
+	Description: Reads the primer file and creates global dictionaries
+	Checks: 1. that the input primer file has 6 columns 2. There are no repeat primer names in column 3. Column 2 must have numbers 4. Column 4 has either bacteria or virus
+	"""
 	logging.debug("\tPROCESS: Reading input file and generating dictionaries.")
 	primers = open(INPUT_FILE, 'r').read()
 	entries = [x for x in primers.split('\n') if len(x) != 0]
@@ -68,6 +74,12 @@ def read_primer_file(INPUT_FILE):
 
 
 def make_primer_file(primer_dict):
+	"""
+	Input: primer_dict
+	Output: FASTA file for each primer pair [*_primer.fasta]
+	Description: reads primer dict and writes primers to FASTA files as forward and reverse complement of reverse primer
+	Checks: None
+	"""
 	#for each primer create a fasta file with the forward and reverse compliment primers
 	logging.debug("\tPROCESS: Creating primer files.")
 	for key in primer_dict:
@@ -77,13 +89,19 @@ def make_primer_file(primer_dict):
 			os.remove(file_out)
 		with open(file_out, 'a') as out_handle:
 			logging.debug(f"\tPROCESS: Creating primer file for:{primer_name} ")
+			#print(primer_dict[key]['primer_name']," Reverse: ", primer_dict[key]['reverse_primer_seq'])
 			primer_dict[key]['reverse_primer_seq'] = rev_comp(primer_dict[key]['reverse_primer_seq'])
-			#print(">{primer_name}_F\n{forward_primer_seq}\n>{primer_name}_R\n{reverse_primer_seq}\n".format(**primer_dict[key]))
-			#print(f"{primer_dict[key]['reverse_primer_seq']}")
+			#print(primer_dict[key]['reverse_primer_seq'])
 			out_handle.write(">{primer_name}_F\n{forward_primer_seq}\n>{primer_name}_R\n{reverse_primer_seq}\n".format(**primer_dict[key]))
 
 
 def create_taxid_list(org_dict):
+	"""
+	Input: org_dict
+	Output: List of taxids [*_taxid.txt] 
+	Description: Uses **taxonkit** to generate a list of all children taxids for the provided taxids in primer file 
+	Checks: None
+	"""
 	logging.debug("\tPROCESS: Creating lists of taxa IDs")
 	for key in org_dict:
 		org_name = org_dict[key]['org_name']
@@ -96,19 +114,17 @@ def create_taxid_list(org_dict):
 				subprocess.call([get_taxid_cmd], shell=True)
 			except subprocess.CalledProcessError as TE:
 				logging.error(f"ERROR: Taxonkit unable to run with error: {TE}")
-
-			#     taxid_pipes = subprocess.Popen(get_taxid_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-			#     std_out, std_err = taxid_pipes.communicate()
-			#     logging.debug(f"{std_out.decode('utf-8')}{std_err.decode('utf-8')}")
-			# except subprocess.CalledProcessError as subprocess_error:
-			#     logging.error(f"Could not download taxid list for: {org_dict[key]['taxid']}")
-			#     logging.error(f"ERROR: {subprocess_error}")
-			#     sys.exit(f"Could not download taxid for: {org_dict[key]}")
-
+				sys.exit()
 			taxid_cmd2 = f"sed -i '/^$/d' {org_dict[key]['taxid'].replace(',','.')}_taxid.txt"
 			subprocess.call([taxid_cmd2], shell=True)
+
 def blast_primers(key):
-	#blast primer files against genome database
+	"""
+	Input: primer_dict keys [*_primer.fasta, *_taxid.txt]
+	Output: file of blast results for each primer [*_blast.results]
+	Description: Takes the primer fasta files and taxid lists and BLASTs primers against taxa specific sequences in nt_v5 database, output is sorted to make parsing easier
+	Checks: None
+	"""
 	logging.debug("\tPROCESS: Starting primer BLAST")
 	org_name = re.sub(pattern = ' ', string = primer_dict[key]['organism'].rstrip(), repl='_')
 	primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
@@ -127,6 +143,11 @@ def blast_primers(key):
 
 
 def extract_subsequence(genome, start, stop):
+	"""
+	Input: genome, start and stop of amplicons identified in BLAST parsing
+	Output: returns FASTA sequences to parse_blast_results
+	Descripton: Takes the gi accession number from Blast results and start and stop position and used blastdbcmd to extract seqeunce from nt_v5 database then replaces header with NCBI taxonomy using JGI http: query
+	"""
 	thisStart = min(start, stop)
 	thisStop  = max(start, stop)
 
@@ -145,6 +166,9 @@ def extract_subsequence(genome, start, stop):
 
 
 def parse_blast_results(key):
+	"""
+
+	"""
 	#for each blast results file create a results dictionary, each entry is a genome hit
 	count = 0
 	# results will be a 4-dimensional variable that will store sorted subject genomic positions as follows
@@ -435,7 +459,7 @@ def clean_up(primer_dict, org_dict):
 			pass
 	for key in org_dict:
 		try:
-			shutil.move(f"{org_dict[key]['taxid']}_taxid.txt", OUTPUT_DIR)
+			shutil.move(f"{org_dict[key]['taxid'].replace(',','.')}_taxid.txt", OUTPUT_DIR)
 		except:
 			pass
 	try:
@@ -447,7 +471,7 @@ def clean_up(primer_dict, org_dict):
 	except:
 		pass 
 	
-def create_log_file():
+def create_log_file(LOG):
 	if __log__:
 		logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 		sys.stderr.write(f"\nWriting log file to: {LOG}\n")
@@ -606,8 +630,8 @@ for opt, arg in __options__:
 		__virus_mapping__ = True
 		MAPPING_FILE = arg
 	elif opt in ('-l','--log'):
-		__log__= True
 		LOG = arg
+		__log__= True
 	elif opt in ('-n','--depen_check'):
 		__dependency_check__ = False        
 
@@ -616,18 +640,18 @@ import errno
 def main():
 	check_arguments()
 	# check_dependencies()
-	# create_log_file()
+	create_log_file(LOG)
 	if __createDB__ :     
 		read_primer_file(INPUT_FILE)
 		make_primer_file(primer_dict)
-		# create_taxid_list(org_dict)
-		# with Pool(int(THREADS)) as pool:
-		# 	pool.map(blast_primers, primer_dict.keys())
-		# 	pool.map(parse_blast_results, primer_dict.keys())
-		# derep_amplicons(primer_dict)
-		# fix_headers(primer_dict)
-		# create_smored_files(primer_dict)
-		# clean_up(primer_dict, org_dict)
+		create_taxid_list(org_dict)
+		with Pool(int(THREADS)) as pool:
+			pool.map(blast_primers, primer_dict.keys())
+			pool.map(parse_blast_results, primer_dict.keys())
+		derep_amplicons(primer_dict)
+		fix_headers(primer_dict)
+		create_smored_files(primer_dict)
+		clean_up(primer_dict, org_dict)
 	elif __update_annotations__:
 		update_annotations()
 if __name__ == '__main__':
