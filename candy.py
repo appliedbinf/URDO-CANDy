@@ -39,24 +39,56 @@ org_dict = {}
 
 
 def read_primer_file(INPUT_FILE):
-    logging.debug("\tPROCESS: Reading input file and generating dictionaries.")
-    primers = open(INPUT_FILE, 'r').read()
-    entries = [x for x in primers.split('\n') if len(x) != 0]
-    #Creates a primer dictionary
-    for entry in entries:
-        entry = entry.rstrip().split('\t')
-        entry[0] =  re.sub(pattern = ' ', string = entry[0], repl = '_')
-        primer_dict_keys = ('primer_name', 'taxid' ,'organism','taxa', 'forward_primer_seq', 'reverse_comp_primer_seq')
-        primer_dict[entry[0]] = dict(zip(primer_dict_keys, entry))
-    #Create and organism dictionary
-    for key in primer_dict:
-        org_name = re.sub(pattern = ' ', string = primer_dict[key]['organism'].rstrip(), repl='_')
-        if primer_dict[key]['organism'] not in org_dict:
-            org_dict[primer_dict[key]['organism']] = {}
-            org_dict[primer_dict[key]['organism']]['taxa'] = primer_dict[key]['taxa']
-            org_dict[primer_dict[key]['organism']]['org_name'] = org_name
-            org_dict[primer_dict[key]['organism']]['taxid'] = primer_dict[key]['taxid']
+    # logging.debug("\tPROCESS: Reading input file and generating dictionaries.")
+    # primers = open(INPUT_FILE, 'r').read()
+    # entries = [x for x in primers.split('\n') if len(x) != 0]
+    # #Creates a primer dictionary
+    # for entry in entries:
+    #     entry = entry.rstrip().split('\t')
+    #     entry[0] =  re.sub(pattern = ' ', string = entry[0], repl = '_')
+    #     primer_dict_keys = ('primer_name', 'taxid' ,'organism','taxa', 'forward_primer_seq', 'reverse_comp_primer_seq')
+    #     primer_dict[entry[0]] = dict(zip(primer_dict_keys, entry))
+    # #Create and organism dictionary
+    # for key in primer_dict:
+    #     org_name = re.sub(pattern = ' ', string = primer_dict[key]['organism'].rstrip(), repl='_')
+    #     if primer_dict[key]['organism'] not in org_dict:
+    #         org_dict[primer_dict[key]['organism']] = {}
+    #         org_dict[primer_dict[key]['organism']]['taxa'] = primer_dict[key]['taxa']
+    #         org_dict[primer_dict[key]['organism']]['org_name'] = org_name
+    #         org_dict[primer_dict[key]['organism']]['taxid'] = primer_dict[key]['taxid']
 
+	"""
+	Input: primer file, 6-column tab-delimited, [1. Primer name, 2. Target organism taxid(can be more than one but must be comma sep, 3. Target organism (never actually used by script), 4. Virus/Bacteria category, 5. Forward primer seqeunce, 6. reverse primer sequence]
+	Output: primer_dict , org_dict
+	Description: Reads the primer file and creates global dictionaries
+	Checks: 1. that the input primer file has 6 columns 2. There are no repeat primer names in column 3. Column 2 must have numbers 4. Column 4 has either bacteria or virus
+	"""
+	logging.debug("\tPROCESS: Reading input file and generating dictionaries.")
+	primers = open(INPUT_FILE, 'r').read()
+	entries = [x for x in primers.split('\n') if len(x) != 0]
+	#Creates a primer dictionary
+	primer_dict_keys = ('primer_name', 'taxid' ,'organism','taxa', 'forward_primer_seq', 'reverse_primer_seq')
+	for entry in entries:
+		entry = entry.rstrip().split('\t')
+		if len(entry) < 6:
+			sys.exit("ERROR: Check that input primer file has the following 6 columns: \n\t1)Primer name\n\t2)Target organism taxid\n\t3)Target organism\n\t4)Virus/bacteria category\n\t5)Forward primer sequence\n\t6)Reverse complement primer sequence\n")
+		entry[0] =  re.sub(pattern = ' ', string = entry[0], repl = '_')
+		entry[1] = re.sub(pattern = ' ', string = entry[1], repl = '')
+		if entry[0] in primer_dict:
+			sys.exit(f"\nERROR: Duplicate primer name: {entry[0]}\n")
+		if not bool(re.match('^[0-9,]+$',entry[1])):
+			sys.exit("\nERROR: Column 2 of input primer file must be taxa ID(s) of target organism (comma separated if more than one ID.)\n")
+		if not (bool(re.match("Bacteria",entry[3], flags=re.I)) or bool(re.match("Virus",entry[3], flags=re.I))):
+			sys.exit("\nERROR: Column 4 must indicate the target category as either \"virus\" or \"bacteria\".\n")
+		primer_dict[entry[0]] = dict(zip(primer_dict_keys, entry))
+	#Create and organism dictionary
+	for key in primer_dict:
+		org_name = re.sub(pattern = ' ', string = primer_dict[key]['organism'].rstrip(), repl='_')
+		if primer_dict[key]['organism'] not in org_dict:
+			org_dict[primer_dict[key]['organism']] = {}
+			org_dict[primer_dict[key]['organism']]['taxa'] = primer_dict[key]['taxa']
+			org_dict[primer_dict[key]['organism']]['org_name'] = org_name
+			org_dict[primer_dict[key]['organism']]['taxid'] = primer_dict[key]['taxid']
 
 def make_primer_file(primer_dict):
     #for each primer create a fasta file with the forward and reverse compliment primers
@@ -84,14 +116,7 @@ def create_taxid_list(org_dict):
                 subprocess.call([get_taxid_cmd], shell=True)
             except subprocess.CalledProcessError as TE:
                 logging.error(f"ERROR: Taxonkit unable to run with error: {TE}")
-
-            #     taxid_pipes = subprocess.Popen(get_taxid_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            #     std_out, std_err = taxid_pipes.communicate()
-            #     logging.debug(f"{std_out.decode('utf-8')}{std_err.decode('utf-8')}")
-            # except subprocess.CalledProcessError as subprocess_error:
-            #     logging.error(f"Could not download taxid list for: {org_dict[key]['taxid']}")
-            #     logging.error(f"ERROR: {subprocess_error}")
-            #     sys.exit(f"Could not download taxid for: {org_dict[key]}")
+                sys.exit()
 
             taxid_cmd2 = f"sed -i '/^$/d' {org_dict[key]['taxid'].replace(',','.')}_taxid.txt"
             subprocess.call([taxid_cmd2], shell=True)
@@ -279,7 +304,7 @@ def fix_headers(pimer_dict):
                             if line in mapping_dict.keys():
                                 out_file.write(">" + mapping_dict[line])
                             else:
-                                out_file.write(">" + line)
+                                out_file.write(">" + line + "\n")
                         else:
                             out_file.write(line)
     else:
@@ -423,7 +448,7 @@ def clean_up(primer_dict, org_dict):
             pass
     for key in org_dict:
         try:
-            shutil.move(f"{org_dict[key]['taxid']}_taxid.txt", OUTPUT_DIR)
+            shutil.move(f"{org_dict[key]['taxid'].replace(',','.')}_taxid.txt", OUTPUT_DIR)
         except:
             pass
     try:
@@ -604,12 +629,12 @@ def main():
     create_log_file(LOG)
     if __createDB__ :     
         read_primer_file(INPUT_FILE)
-        make_primer_file(primer_dict)
-        create_taxid_list(org_dict)
-        with Pool(int(THREADS)) as pool:
-            pool.map(blast_primers, primer_dict.keys())
-            pool.map(parse_blast_results, primer_dict.keys())
-        derep_amplicons(primer_dict)
+        # make_primer_file(primer_dict)
+        # create_taxid_list(org_dict)
+        # with Pool(int(THREADS)) as pool:
+            # pool.map(blast_primers, primer_dict.keys())
+            # pool.map(parse_blast_results, primer_dict.keys())
+        # derep_amplicons(primer_dict)
         fix_headers(primer_dict)
         create_smored_files(primer_dict)
         clean_up(primer_dict, org_dict)
