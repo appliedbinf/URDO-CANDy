@@ -435,7 +435,7 @@ def clean_up(primer_dict, org_dict):
     except:
         pass 
     
-def create_log_file():
+def create_log_file(LOG):
     if __log__:
         logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
         sys.stderr.write(f"\nWriting log file to: {LOG}\n")
@@ -601,7 +601,7 @@ import errno
 def main():
     check_dependencies()
     check_arguments()
-    create_log_file()
+    create_log_file(LOG)
     if __createDB__ :     
         read_primer_file(INPUT_FILE)
         make_primer_file(primer_dict)
