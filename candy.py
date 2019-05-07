@@ -90,7 +90,7 @@ def make_primer_file(primer_dict):
 		with open(file_out, 'a') as out_handle:
 			logging.debug(f"\tPROCESS: Creating primer file for:{primer_name} ")
 			#print(primer_dict[key]['primer_name']," Reverse: ", primer_dict[key]['reverse_primer_seq'])
-			primer_dict[key]['reverse_primer_seq'] = rev_comp(primer_dict[key]['reverse_primer_seq'])
+			#primer_dict[key]['reverse_primer_seq'] = rev_comp(primer_dict[key]['reverse_primer_seq'])
 			#print(primer_dict[key]['reverse_primer_seq'])
 			out_handle.write(">{primer_name}_F\n{forward_primer_seq}\n>{primer_name}_R\n{reverse_primer_seq}\n".format(**primer_dict[key]))
 
@@ -315,7 +315,7 @@ def fix_headers(pimer_dict):
 							if line in mapping_dict.keys():
 								out_file.write(">" + mapping_dict[line])
 							else:
-								out_file.write(">" + line)
+								out_file.write(">" + line + "\n")
 						else:
 							out_file.write(line)
 	else:
@@ -639,7 +639,7 @@ import tempfile
 import errno    
 def main():
 	check_arguments()
-	# check_dependencies()
+	check_dependencies()
 	create_log_file(LOG)
 	if __createDB__ :     
 		read_primer_file(INPUT_FILE)
