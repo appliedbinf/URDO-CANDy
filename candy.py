@@ -90,7 +90,7 @@ def make_primer_file(primer_dict):
 		with open(file_out, 'a') as out_handle:
 			logging.debug(f"\tPROCESS: Creating primer file for:{primer_name} ")
 			#print(primer_dict[key]['primer_name']," Reverse: ", primer_dict[key]['reverse_primer_seq'])
-			#primer_dict[key]['reverse_primer_seq'] = rev_comp(primer_dict[key]['reverse_primer_seq'])
+			primer_dict[key]['reverse_primer_seq'] = rev_comp(primer_dict[key]['reverse_primer_seq'])
 			#print(primer_dict[key]['reverse_primer_seq'])
 			out_handle.write(">{primer_name}_F\n{forward_primer_seq}\n>{primer_name}_R\n{reverse_primer_seq}\n".format(**primer_dict[key]))
 
@@ -152,6 +152,7 @@ def extract_subsequence(genome, start, stop):
 	thisStop  = max(start, stop)
 
 	extract_cmd = f"blastdbcmd -db nt_v5 -entry {genome} -range {thisStart}-{thisStop}"
+	print(extract_cmd)
 	extract_seq = subprocess.check_output(extract_cmd, shell=True,universal_newlines=True)
 	header,seq = extract_seq.split('\n',1)
 	seq = seq.rstrip()
@@ -311,7 +312,7 @@ def fix_headers(pimer_dict):
 				with open(derep_file, 'r') as in_file:                                
 					for line in in_file:
 						if line.startswith(">"):
-							line = line.split("s:")[1].rstrip()
+							line = line.split("s:",1)[1].rstrip()
 							if line in mapping_dict.keys():
 								out_file.write(">" + mapping_dict[line])
 							else:
@@ -327,7 +328,7 @@ def fix_headers(pimer_dict):
 				with open(derep_file, 'r') as in_file:                                
 					for line in in_file:
 						if line.startswith(">"):
-							line = line.split("s:")[1]
+							line = line.split("s:",1)[1]
 							out_file.write(">" + line)
 						else:
 							out_file.write(line)
@@ -407,12 +408,15 @@ def create_smored_files(primer_dict):
 
 def update_annotations():
 	profile_file = PROFILE_FILE
-	mapping_file = "virus_mapping.txt"
+	mapping_file = MAPPING_FILE
 	mapping_dict = {}
 	temp_file = "temp"
 	with open(mapping_file, 'r') as in1_file:
 		for line in in1_file:
-			mapping_dict[line.split('\t')[0]] = line.split('\t')[1]
+			try:
+				mapping_dict[line.split('\t')[0]] = line.split('\t')[1]
+			except ValueError:
+				pass
 	with open(temp_file, 'w') as out_file:
 		with open(profile_file, 'r') as in2_file:
 			for line in in2_file:

@@ -14291,3 +14291,6 @@ unidentified simian adenovirus	Non-human adenovirus
 WUHARV Enterovirus 1	Enterovirus
 WUHARV Enterovirus 2	Enterovirus
 WUHARV Enterovirus 3	Enterovirus
+Staphylococcus aureus;ss:Staphylococcus aureus subsp. aureus	Staphylococcus aureus
+Klebsiella pneumoniae;ss:Klebsiella pneumoniae subsp. pneumoniae	Klebsiella pneumoniae
+Klebsiella pneumoniae;ss:Klebsiella pneumoniae subsp. rhinoscleromatis	Klebsiella pneumoniae
