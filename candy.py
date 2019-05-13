@@ -53,7 +53,7 @@ def read_primer_file(INPUT_FILE):
 	for entry in entries:
 		entry = entry.rstrip().split('\t')
 		if len(entry) < 6:
-			sys.exit("ERROR: Check that input primer file has the following 6 columns: \n\t1)Primer name\n\t2)Target organism taxid\n\t3)Target organism\n\t4)Virus/bacteria category\n\t5)Forward primer sequence\n\t6)Reverse complement primer sequence\n")
+			sys.exit("ERROR: Check that input primer file has the following 6 columns: \n\t1)Primer name\n\t2)Target organism taxid\n\t3)Target organism\n\t4)Virus/bacteria category\n\t5)Forward primer sequence\n\t6)Reverse primer sequence\n")
 		entry[0] =  re.sub(pattern = ' ', string = entry[0], repl = '_')
 		entry[1] = re.sub(pattern = ' ', string = entry[1], repl = '')
 		if entry[0] in primer_dict:
@@ -152,7 +152,6 @@ def extract_subsequence(genome, start, stop):
 	thisStop  = max(start, stop)
 
 	extract_cmd = f"blastdbcmd -db nt_v5 -entry {genome} -range {thisStart}-{thisStop}"
-	print(extract_cmd)
 	extract_seq = subprocess.check_output(extract_cmd, shell=True,universal_newlines=True)
 	header,seq = extract_seq.split('\n',1)
 	seq = seq.rstrip()
@@ -477,6 +476,7 @@ def clean_up(primer_dict, org_dict):
 	
 def create_log_file(LOG):
 	if __log__:
+		LOG = (f"{LOG}.log")
 		logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 		sys.stderr.write(f"\nWriting log file to: {LOG}\n")
 	else:
