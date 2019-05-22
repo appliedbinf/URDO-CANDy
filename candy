@@ -469,8 +469,6 @@ def clean_up(primer_dict, org_dict):
 	else:
 		if os.path.isdir(OUTPUT_DIR):
 			shutil.rmtree(OUTPUT_DIR)
-		if os.path.isfile(OUTPUT_DIR):
-			os.remove(OUTPUT_DIR)
 		os.mkdir(OUTPUT_DIR)
 	logging.debug(f"\tPROCESS: Moving accessory file to {OUTPUT_DIR}")
 	for key in primer_dict:
@@ -513,7 +511,7 @@ def create_log_file(LOG):
 
 	"""
 	if __log__:
-		logging.basicConfig(filename=f"{LOG}.log", level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+		logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 		sys.stderr.write(f"\nWriting log file to: {LOG}\n")
 	else:
 		LOG=subprocess.check_output('date "+%Y%m%d_%H%M"',shell=True).decode('utf-8').rstrip() +'.log'
