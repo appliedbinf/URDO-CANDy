@@ -141,6 +141,30 @@ def blast_primers(key):
 	sort_cmd = f"sort -k14n {primer_name}_blast.results -o {primer_name}_blast.results"
 	subprocess.run(sort_cmd, shell=True)
 
+def get_taxonomy(taxid):
+	nodes = "~/.taxonkit/nodes.dmp"
+	names = "~/.taxonkit/names.dmp"
+	taxid = taxid
+	with open(nodes, 'r') as in_file1:
+		parents = {}
+		rank = {}
+		for line in in_file1:
+			#line = line.split('\s+\|\s+')
+			parents[line.split('\s+\|\s+')[0]] = line.split('\s+\|\s+')[1]
+			rank[line.split('\s+\|\s+')[0]] = line.split('\s+\|\s+')[2]
+	in_file1.close()
+
+	with open(name, 'r') as in_file2:
+		names = {}
+		for line in in_file2:
+			if "scientific name" in line:
+				names[line.split('\s+\|\s+')[0]] = line.split('\s+\|\s+')[1]
+	in_file2.close()
+
+	scientific_name = list()
+	ranks = list()
+	if taxid == 1:
+		
 
 def extract_subsequence(genome, start, stop):
 	"""
@@ -151,16 +175,18 @@ def extract_subsequence(genome, start, stop):
 	thisStart = min(start, stop)
 	thisStop  = max(start, stop)
 
-	extract_cmd = f"blastdbcmd -db nt_v5 -entry {genome} -range {thisStart}-{thisStop}"
+	extract_cmd = f"blastdbcmd -db nt_v5 -entry {genome} -range {thisStart}-{thisStop} -outfmt '>%T\n%s' "
 	extract_seq = subprocess.check_output(extract_cmd, shell=True,universal_newlines=True)
 	header,seq = extract_seq.split('\n',1)
 	seq = seq.rstrip()
 	if thisStart != start :
 		seq = rev_comp(seq)
 
-	taxonomy = re.split(">|:", header)[1]
-	taxonomy_cmd = f'curl -s http://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
-	header = ">"+ taxonomy +"|" + subprocess.check_output(taxonomy_cmd, shell=True,universal_newlines=True)
+	taxonomy = re.split(">", header)[1]
+	taxonomy_id = get_taxonomy(taxonomy)
+	# taxonomy_cmd = f'curl -s http://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
+	header = ">"+ taxonomy +"|" + taxonomy_id
+	# header = ">"+ taxonomy +"|" + subprocess.check_output(taxonomy_cmd, shell=True,universal_newlines=True)
 	seq = re.sub(pattern="\n", string = seq, repl="")
 	return("{}\n{}\n".format(header,seq))
 
@@ -323,6 +349,8 @@ def fix_headers(pimer_dict):
 				with open(derep_file, 'r') as in_file:                                
 					for line in in_file:
 						if line.startswith(">"):
+						if "Not found" in line:
+							continue
 							#print(line.rstrip())
 							line = line.split("s:",1)[1].rstrip()
 							#print(line)
@@ -344,6 +372,8 @@ def fix_headers(pimer_dict):
 				with open(derep_file, 'r') as in_file:                                
 					for line in in_file:
 						if line.startswith(">"):
+						if "Not found" in line:
+							continue	
 							line = line.split("s:")[1]
 							out_file.write(">" + line)
 						else:
