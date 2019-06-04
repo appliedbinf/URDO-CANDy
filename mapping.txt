@@ -334,9 +334,9 @@ Human orthopneumovirus;Human respiratory syncytial virus B;Human Respiratory syn
 Human orthopneumovirus;Human respiratory syncytial virus B	Human respiratory syncytial virus B
 Human orthopneumovirus	Human respiratory syncytial virus
 Human respirovirus 1;Human parainfluenza virus 1 strain Washington/1964	HPIV1
-Human respirovirus 1	HPIV2
+Human respirovirus 1	HPIV1
 Human respirovirus 3;Simian Agent 10	HPIV3
-Human respirovirus 3	HPIV4
+Human respirovirus 3	HPIV3
 Human rhinovirus AMS323	Rhinovirus
 Human rhinovirus C192483	Rhinovirus
 Human rhinovirus C326876	Rhinovirus
@@ -346,7 +346,7 @@ Human rhinovirus sp.	Rhinovirus
 Human rhinovirus W9769	Rhinovirus
 Human rubulavirus 2	HPIV2
 Human rubulavirus 4;Human parainfluenza virus 4a	HPIV4
-Human rubulavirus 4;Human parainfluenza virus 4b	HPIV5
+Human rubulavirus 4;Human parainfluenza virus 4b	HPIV4
 Influenza A virus;H10N1 subtype;Influenza A virus (A/common goldeneye/Wisconsin/16OS4100/2016(H10N1))	Influenza A virus
 Influenza A virus;H10N1 subtype;Influenza A virus (A/duck/Bangladesh/24035/2014(H10N1))	Influenza A virus
 Influenza A virus;H10N1 subtype;Influenza A virus (A/Eurasian wigeon/Netherlands/3/2007(H10N1))	Influenza A virus
@@ -12986,165 +12986,165 @@ Influenza B virus;Influenza B virus (B/Vermont/12/2015)	Influenza B virus
 Influenza B virus;Influenza B virus (B/Vermont/12/2016)	Influenza B virus
 Influenza B virus;Influenza B virus (B/Vermont/13/2016)	Influenza B virus
 Influenza B virus;Influenza B virus (B/Vermont/15/2016)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/02/1987)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/1/2014)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/101/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/1028/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/104/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/104/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/107/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/107/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/108/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/108/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/109/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/110/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/113/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/115/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/117/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/121/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/122/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/123/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/124/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/125/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/133/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/142/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/143/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/150/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/151/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/156/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/158/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/159/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/160/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/162/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/17/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/18/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/19/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/2/1987)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/2/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/20/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/205/2007)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/207/2014)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/214/2007)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/219/2007)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/22/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/224/2007)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/230/2008)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/243/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/25/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/25/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/29/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/3/2014)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/301/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/303/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/304/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/304/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/306/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/308/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/310/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/312/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/325/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/327/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/328/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/330/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/333/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/341/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/349/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/35/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/353/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/356/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/37/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/38/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/38/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/4/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/40/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/413/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/42/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/46/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/500/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/500/2003)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/500/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/500/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/500/2007)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/500/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/500/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/500/2014)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/501/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/501/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/502/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/502/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/502/2014)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/503/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/503/2010)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/503/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/504/2000)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/504/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/504/2006)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/504/2010)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/504/2014)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/505/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/505/2007)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/506/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/506/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/506/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/506/2010)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/506/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/506/2014)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/507/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/507/2008)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/507/2010)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/507/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/508/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/508/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/508/2007)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/508/2008)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/508/2010)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/508/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/508/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/509/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/509/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/509/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/512/2010)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/513/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/513/2008)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/514/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/515/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/515/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/517/2004)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/517/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/523/2008)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/524/2008)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/524/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/525/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/525/2008)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/525/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/526/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/526/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/527/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/530/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/532/2005)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/539/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/54/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/540/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/549/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/562/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/593/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/6/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/6/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/661/2010)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/667/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/679/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/7/2012)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/7/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/800/2010)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/801/2007)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/801/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/801/2014)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/804/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/804/2014)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/829/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/835/2013)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/855/2011)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Victoria/9/2011)	Influenza B virus
+Influenza B virus;Influenza B virus (B/Victoria/02/1987)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/1/2014)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/101/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/1028/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/104/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/104/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/107/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/107/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/108/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/108/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/109/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/110/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/113/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/115/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/117/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/121/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/122/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/123/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/124/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/125/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/133/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/142/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/143/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/150/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/151/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/156/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/158/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/159/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/160/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/162/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/17/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/18/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/19/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/2/1987)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/2/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/20/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/205/2007)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/207/2014)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/214/2007)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/219/2007)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/22/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/224/2007)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/230/2008)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/243/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/25/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/25/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/29/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/3/2014)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/301/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/303/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/304/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/304/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/306/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/308/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/310/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/312/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/325/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/327/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/328/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/330/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/333/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/341/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/349/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/35/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/353/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/356/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/37/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/38/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/38/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/4/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/40/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/413/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/42/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/46/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/500/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/500/2003)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/500/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/500/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/500/2007)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/500/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/500/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/500/2014)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/501/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/501/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/502/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/502/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/502/2014)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/503/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/503/2010)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/503/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/504/2000)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/504/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/504/2006)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/504/2010)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/504/2014)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/505/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/505/2007)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/506/2002)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/506/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/506/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/506/2010)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/506/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/506/2014)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/507/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/507/2008)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/507/2010)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/507/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/508/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/508/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/508/2007)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/508/2008)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/508/2010)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/508/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/508/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/509/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/509/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/509/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/512/2010)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/513/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/513/2008)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/514/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/515/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/515/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/517/2004)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/517/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/523/2008)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/524/2008)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/524/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/525/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/525/2008)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/525/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/526/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/526/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/527/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/530/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/532/2005)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/539/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/54/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/540/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/549/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/562/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/593/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/6/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/6/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/661/2010)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/667/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/679/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/7/2012)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/7/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/800/2010)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/801/2007)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/801/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/801/2014)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/804/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/804/2014)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/829/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/835/2013)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/855/2011)	Influenza B virus - Victoria
+Influenza B virus;Influenza B virus (B/Victoria/9/2011)	Influenza B virus - Victoria
 Influenza B virus;Influenza B virus (B/Vienna/1/99)	Influenza B virus
 Influenza B virus;Influenza B virus (B/Virginia/01/2010)	Influenza B virus
 Influenza B virus;Influenza B virus (B/Virginia/01/2012)	Influenza B virus
@@ -13651,22 +13651,22 @@ Influenza B virus;Influenza B virus (B/Wyoming/13/2016)	Influenza B virus
 Influenza B virus;Influenza B virus (B/Wyoming/14/2016)	Influenza B virus
 Influenza B virus;Influenza B virus (B/Wyoming/19/2016)	Influenza B virus
 Influenza B virus;Influenza B virus (B/Wyoming/25/2015)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Wyoming/27/2015)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/1/73)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/115/2003)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/1246/2003)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/1311/2003)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/16/1988)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/222/2002)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/K270/2001)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/K386/2001)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/K461/2001)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/K490/2001)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/K500/2001)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/K501/2001)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/K515/2001)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/K519/2001)	Influenza B virus
-Influenza B virus;Influenza B virus (B/Yamagata/K521/2001)	Influenza B virus
+Influenza B virus;Influenza B virus (B/Wyoming/27/2015)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/1/73)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/115/2003)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/1246/2003)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/1311/2003)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/16/1988)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/222/2002)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/K270/2001)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/K386/2001)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/K461/2001)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/K490/2001)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/K500/2001)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/K501/2001)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/K515/2001)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/K519/2001)	Influenza B virus - Yamagata
+Influenza B virus;Influenza B virus (B/Yamagata/K521/2001)	Influenza B virus - Yamagata
 Influenza B virus;Influenza B virus (B/Yamanashi/166/1998)	Influenza B virus
 Influenza B virus	Influenza B virus
 Influenza C virus;Influenza C virus (C/Aichi/1/81)	Influenza C virus
@@ -14077,22 +14077,22 @@ Rhinovirus B;Rhinovirus B14	Rhinovirus B
 Rhinovirus B;Rhinovirus B48	Rhinovirus B
 Rhinovirus B;Rhinovirus B69	Rhinovirus B
 Rhinovirus B	Rhinovirus B
-Rhinovirus C;Human rhinovirus C1;Human rhinovirus NAT001	Rhinocirus C
-Rhinovirus C;Human rhinovirus C10;Human rhinovirus QCE	Rhinocirus C
-Rhinovirus C;Human rhinovirus C11	Rhinocirus C
-Rhinovirus C;Human rhinovirus C15	Rhinocirus C
-Rhinovirus C;Human rhinovirus C2;Human rhinovirus NAT045	Rhinocirus C
-Rhinovirus C;Human rhinovirus C2	Rhinocirus C
-Rhinovirus C;Human rhinovirus C3	Rhinocirus C
-Rhinovirus C;Human rhinovirus C35	Rhinocirus C
-Rhinovirus C;Human rhinovirus C42	Rhinocirus C
-Rhinovirus C;Human rhinovirus C43	Rhinocirus C
-Rhinovirus C;Human rhinovirus C47	Rhinocirus C
-Rhinovirus C;Human rhinovirus C53	Rhinocirus C
-Rhinovirus C;Human rhinovirus C54	Rhinocirus C
-Rhinovirus C;Human rhinovirus C56	Rhinocirus C
-Rhinovirus C;Human rhinovirus C8	Rhinocirus C
-Rhinovirus C	Rhinocirus C
+Rhinovirus C;Human rhinovirus C1;Human rhinovirus NAT001	Rhinovirus C
+Rhinovirus C;Human rhinovirus C10;Human rhinovirus QCE	Rhinovirus C
+Rhinovirus C;Human rhinovirus C11	Rhinovirus C
+Rhinovirus C;Human rhinovirus C15	Rhinovirus C
+Rhinovirus C;Human rhinovirus C2;Human rhinovirus NAT045	Rhinovirus C
+Rhinovirus C;Human rhinovirus C2	Rhinovirus C
+Rhinovirus C;Human rhinovirus C3	Rhinovirus C
+Rhinovirus C;Human rhinovirus C35	Rhinovirus C
+Rhinovirus C;Human rhinovirus C42	Rhinovirus C
+Rhinovirus C;Human rhinovirus C43	Rhinovirus C
+Rhinovirus C;Human rhinovirus C47	Rhinovirus C
+Rhinovirus C;Human rhinovirus C53	Rhinovirus C
+Rhinovirus C;Human rhinovirus C54	Rhinovirus C
+Rhinovirus C;Human rhinovirus C56	Rhinovirus C
+Rhinovirus C;Human rhinovirus C8	Rhinovirus C
+Rhinovirus C	Rhinovirus C
 Sea lion mastadenovirus A;California sea lion adenovirus 1	Non-human adenovirus
 Severe acute respiratory syndrome-related coronavirus;SARS coronavirus;Bat coronavirus Cp/Yunnan2011	SARS
 Severe acute respiratory syndrome-related coronavirus;SARS coronavirus;Bat coronavirus Rp/Shaanxi2011	SARS
