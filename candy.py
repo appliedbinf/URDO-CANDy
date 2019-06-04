@@ -324,6 +324,8 @@ def fix_headers(pimer_dict):
 					for line in in_file:
 						if line.startswith(">"):
 							#print(line.rstrip())
+							if "Not found" in line:
+								continue
 							line = line.split("s:",1)[1].rstrip()
 							#print(line)
 							if line in mapping_dict.keys():
@@ -344,6 +346,8 @@ def fix_headers(pimer_dict):
 				with open(derep_file, 'r') as in_file:                                
 					for line in in_file:
 						if line.startswith(">"):
+							if "Not found" in line:
+									continue
 							line = line.split("s:")[1]
 							out_file.write(">" + line)
 						else:
@@ -688,10 +692,10 @@ def main():
 	create_log_file(LOG)
 	if __createDB__ :     
 		read_primer_file(INPUT_FILE)
-		make_primer_file(primer_dict)
-		create_taxid_list(org_dict)
+		#make_primer_file(primer_dict)
+		#create_taxid_list(org_dict)
 		with Pool(int(THREADS)) as pool:
-			pool.map(blast_primers, primer_dict.keys())
+			#pool.map(blast_primers, primer_dict.keys())
 			pool.map(parse_blast_results, primer_dict.keys())
 		derep_amplicons(primer_dict)
 		fix_headers(primer_dict)
