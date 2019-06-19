@@ -159,7 +159,7 @@ def extract_subsequence(genome, start, stop):
 		seq = rev_comp(seq)
 
 	taxonomy = re.split(">|:", header)[1]
-	taxonomy_cmd = f'curl -s http://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
+	taxonomy_cmd = f'curl -s -L http://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
 	header = ">"+ taxonomy +"|" + subprocess.check_output(taxonomy_cmd, shell=True,universal_newlines=True)
 	seq = re.sub(pattern="\n", string = seq, repl="")
 	return("{}\n{}\n".format(header,seq))
@@ -692,10 +692,10 @@ def main():
 	create_log_file(LOG)
 	if __createDB__ :     
 		read_primer_file(INPUT_FILE)
-		#make_primer_file(primer_dict)
-		#create_taxid_list(org_dict)
+		make_primer_file(primer_dict)
+		create_taxid_list(org_dict)
 		with Pool(int(THREADS)) as pool:
-			#pool.map(blast_primers, primer_dict.keys())
+			pool.map(blast_primers, primer_dict.keys())
 			pool.map(parse_blast_results, primer_dict.keys())
 		derep_amplicons(primer_dict)
 		fix_headers(primer_dict)
