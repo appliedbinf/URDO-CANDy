@@ -14291,3 +14291,22 @@ unidentified simian adenovirus	Non-human adenovirus
 WUHARV Enterovirus 1	Enterovirus
 WUHARV Enterovirus 2	Enterovirus
 WUHARV Enterovirus 3	Enterovirus
+Staphylococcus aureus;ss:Staphylococcus aureus subsp. aureus	Staphylococcus aureus
+Staphylococcus carnosus;ss:Staphylococcus carnosus subsp. carnosus	Staphylococcus carnosus
+Staphylococcus hominis;ss:Staphylococcus hominis subsp. hominis	Staphylococcus hominis
+Staphylococcus saprophyticus;ss:Staphylococcus saprophyticus subsp. saprophyticus	Staphylococcus saprophyticus
+Staphylococcus sciuri;ss:Staphylococcus sciuri subsp. sciuri	Staphylococcus sciuri
+Streptococcus anginosus;ss:Streptococcus anginosus subsp. whileyi	Streptococcus anginosus
+Streptococcus constellatus;ss:Streptococcus constellatus subsp. constellatus	Streptococcus constellatus
+Streptococcus constellatus;ss:Streptococcus constellatus subsp. pharyngis	Streptococcus constellatus
+Streptococcus dysgalactiae;ss:Streptococcus dysgalactiae subsp. dysgalactiae	Streptococcus dysgalactiae
+Streptococcus dysgalactiae;ss:Streptococcus dysgalactiae subsp. equisimilis	Streptococcus dysgalactiae
+Streptococcus equi;ss:Streptococcus equi subsp. equine 	Non-human streptococcus
+Streptococcus equi;ss:Streptococcus equi subsp. zooepidemicus	Non-human streptococcus
+Streptococcus gallolyticus;ss:Streptococcus gallolyticus subsp. gallolyticus	Streptococcus gallolyticus
+Streptococcus infantarius;ss:Streptococcus infantarius subsp. infantarius	Streptococcus infantarius
+Streptococcus oralis;ss:Streptococcus oralis subsp. tigurinus	Streptococcus oralis
+Klebsiella pneumoniae;ss:Klebsiella pneumoniae subsp. ozaenae	Klebsiella pneumoniae
+Klebsiella pneumoniae;ss:Klebsiella pneumoniae subsp. pneumoniae	Klebsiella pneumoniae
+Klebsiella pneumoniae;ss:Klebsiella pneumoniae subsp. rhinoscleromatis	Klebsiella pneumoniae
+Legionella pneumophila;ss:Legionella pneumophila subsp. pneumophila	Legionella pneumophila
