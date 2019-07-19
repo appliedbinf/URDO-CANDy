@@ -371,7 +371,7 @@ def create_smored_files(primer_dict):
 	fix_taxonomy_check_cmd = f"sed ':a;N;$!ba;s/\n[^>]/PLACEHOLDER/g' {taxonomy_check_file} |grep -v 'nnn' |sed 's/PLACEHOLDER/\n/' > {taxonomy_file}"
 	amplicon_dict = {}
 	if __use_output_prefix__ :
-		amplicon_file = OUTPUT_PREFIX + "_amplicons.fasta"
+		amplicon_file = OUTPUT_PREFIX + "_ampliconsFile.fasta"
 		profile_file = OUTPUT_PREFIX + "_profile.tsv"
 		config_file = OUTPUT_PREFIX + "_config.txt"
 	else:
