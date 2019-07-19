@@ -291,10 +291,13 @@ def derep_amplicons(primer_dict):
 		primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
 		amplicon_file = primer_name + "_amplicons.fasta"
 		derep_file = primer_name + "_derep_amplicons.fasta"
+		temp_file = "temp"
 		# comment the next line when you are actually running the program.  This is placed here for debugging purposes only
 		if os.path.exists(derep_file) and os.path.isfile(derep_file):
 			os.remove(derep_file)
-
+		sort_cmd = f"cat {amplicon_file} |paste - - |sort -r -k2 -t ':' |tr '\t' '\n' > {temp_file}"
+		os.system(sort_cmd)
+		os.rename(temp_file, amplicon_file)
 		logging.debug(f"\tPROCESS: Dereplicating amplicons for: {primer_name}")
 		dereplicate_cmd = f"vsearch --derep_fulllength {amplicon_file} --strand both --fasta_width 0 --notrunclabels --output {derep_file}".split(" ")
 		subprocess.run(dereplicate_cmd, stderr=subprocess.DEVNULL)
