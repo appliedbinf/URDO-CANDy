@@ -295,7 +295,8 @@ def derep_amplicons(primer_dict):
 		# comment the next line when you are actually running the program.  This is placed here for debugging purposes only
 		if os.path.exists(derep_file) and os.path.isfile(derep_file):
 			os.remove(derep_file)
-		sort_cmd = f"cat {amplicon_file} |paste - - |sort -r -k2 -t ':' |tr '\t' '\n' > {temp_file}"
+		#Change from sort_cmd = f"cat {amplicon_file} |paste - - |sort -r -k2 -t ':' |tr '\t' '\n' > {temp_file}"
+		sort_cmd = f"cat {amplicon_file} |paste - - |sed 's/|/ /' |sort -r -k2 |tr '\t' '\n' > {temp_file}"
 		os.system(sort_cmd)
 		os.rename(temp_file, amplicon_file)
 		logging.debug(f"\tPROCESS: Dereplicating amplicons for: {primer_name}")
