@@ -522,10 +522,12 @@ def create_log_file(LOG):
 	if __log__:
 		logging.basicConfig(filename=f"{LOG}.log", level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 		sys.stderr.write(f"\nWriting log file to: {LOG}\n")
+		logging.debug(f"Command: {' '.join(sys.argv)}")
 	else:
 		LOG=subprocess.check_output('date "+%Y%m%d_%H%M"',shell=True).decode('utf-8').rstrip() +'.log'
 		logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 		sys.stderr.write(f"\nWriting log file to: {LOG}\n")
+		logging.debug(f"Command: {' '.join(sys.argv)}")
 
 def check_arguments():
 	if __update_annotations__:
