@@ -297,8 +297,8 @@ def derep_amplicons(primer_dict):
 			os.remove(derep_file)
 		#Change from sort_cmd = f"cat {amplicon_file} |paste - - |sort -r -k2 -t ':' |tr '\t' '\n' > {temp_file}"
 		#Change from sort_cmd = f"cat {amplicon_file} |paste - - |sed 's/|/ /' |sort -r -k2 |tr '\t' '\n' > {temp_file}"
-		sort_cmd = f"cat {amplicon_file} |paste - - | awk 'BEGIN{FS="\t"; OFS="\t"}{print length($1),$1,$2}' | sort -k1nr | awk 'BEGIN{FS="\t"}{print $2"\n"$3}' > {temp_file} "
-		os.system(sort_cmd)
+		sort_cmd = "cat {} |paste - - | awk 'BEGIN{{FS=\"\t\"; OFS=\"\t\"}} {{print length($1),$1,$2}}' | sort -k1nr | awk 'BEGIN{{FS=\"\t\"}}{{print $2\"\\n\"$3}}' > {}".format(amplicon_file,temp_file)
+		subprocess.call(sort_cmd, shell=True)
 		os.rename(temp_file, amplicon_file)
 		logging.debug(f"\tPROCESS: Dereplicating amplicons for: {primer_name}")
 		dereplicate_cmd = f"vsearch --derep_fulllength {amplicon_file} --strand both --fasta_width 0 --notrunclabels --output {derep_file}".split(" ")
