@@ -14312,3 +14312,4 @@ Klebsiella pneumoniae;ss:Klebsiella pneumoniae subsp. rhinoscleromatis	Klebsiell
 Legionella pneumophila;ss:Legionella pneumophila subsp. pneumophila	Legionella pneumophila
 Human mastadenovirus B;Human adenovirus isolate MY7/1	Human adenovirus
 Human mastadenovirus B;Human adenovirus isolate MY8/1	Human adenovirus
+Human mastadenovirus B;Gorilla gorilla adenovirus B7	Non-human adenovirus
