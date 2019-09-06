@@ -159,7 +159,7 @@ def extract_subsequence(genome, start, stop):
 		seq = rev_comp(seq)
 
 	taxonomy = re.split(">|:", header)[1]
-	taxonomy_cmd = f'curl -s -L http://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
+	taxonomy_cmd = f'curl -s -L https://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
 	header = ">"+ taxonomy +"|" + subprocess.check_output(taxonomy_cmd, shell=True,universal_newlines=True)
 	seq = re.sub(pattern="\n", string = seq, repl="")
 	return("{}\n{}\n".format(header,seq))
