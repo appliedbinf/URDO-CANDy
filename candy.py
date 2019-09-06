@@ -159,7 +159,7 @@ def extract_subsequence(genome, start, stop):
 		seq = rev_comp(seq)
 
 	taxonomy = re.split(">|:", header)[1]
-	taxonomy_cmd = f'curl -s -L http://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
+	taxonomy_cmd = f'curl -s -L https://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
 	header = ">"+ taxonomy +"|" + subprocess.check_output(taxonomy_cmd, shell=True,universal_newlines=True)
 	seq = re.sub(pattern="\n", string = seq, repl="")
 	return("{}\n{}\n".format(header,seq))
@@ -620,7 +620,15 @@ def check_dependencies():
 				print("BLAST database nt_v5: Passed")
 			except subprocess.CalledProcessError as blastDBerror:
 				sys.stderr.write("Make sure nt_v5 is downloaded and the ennvironmental variable 'BLASTDB' is set to the directory containing nt_v5.\n")
-				exit()
+				sys.exit()
+			taxonomy_cmd = f'curl -s -L https://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
+			header =  subprocess.check_output(taxonomy_cmd, shell=True,universal_newlines=True)
+			correct_header = 'sk:Viruses;p:Negarnaviricota;c:Insthoviricetes;o:Articulavirales;f:Orthomyxoviridae;g:Alphainfluenzavirus;s:Influenza A virus;H1N1 subtype;Influenza A virus (A/Chennai/05/2009(H1N1))'
+			try:
+				header == correct_header
+			except ValueError:
+				sys.stderr.write("JGI taxonomy server (https://taxonomy.jgi-psf.org/) is not responding. CANDY has stopped, please try again later")
+				sys.exit()
 ############################################################################################
 #Program execution starts here
 HELP = "To create a new database: \n\ncandy.py -i <primer table> [-o <prefix for output files>] [-d <directory for intermediate file>] [-g <additional presence/absence seqs>] [-a <additional characterization seqs>] [-t num threads] [-m <mapping file>] [-l <log file>]  \n\nTo update an existing profile file: \n\ncandy.py --update -p <profile file> -m <mapping file> \n\nUse candy -h  for more infomation\n\n"
