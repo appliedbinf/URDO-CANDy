@@ -14313,3 +14313,18 @@ Legionella pneumophila;ss:Legionella pneumophila subsp. pneumophila	Legionella p
 Human mastadenovirus B;Human adenovirus isolate MY7/1	Human adenovirus
 Human mastadenovirus B;Human adenovirus isolate MY8/1	Human adenovirus
 Human mastadenovirus B;Gorilla gorilla adenovirus B7	Non-human adenovirus
+Severe acute respiratory syndrome-related coronavirus;Bat coronavirus Cp/Yunnan2011	SARS
+Severe acute respiratory syndrome-related coronavirus;Bat coronavirus Rp/Shaanxi2011	SARS
+Severe acute respiratory syndrome-related coronavirus;Bat SARS coronavirus HKU3;Bat SARS coronavirus HKU3-10	SARS
+Severe acute respiratory syndrome-related coronavirus;Bat SARS coronavirus HKU3;Bat SARS coronavirus HKU3-12	SARS
+Severe acute respiratory syndrome-related coronavirus;Bat SARS CoV Rf1/2004;Bat CoV 273/2005	SARS
+Severe acute respiratory syndrome-related coronavirus;Bat SARS CoV Rm1/2004	SARS
+Severe acute respiratory syndrome-related coronavirus;Bat SARS CoV Rm1/2004;Bat CoV 279/2005	SARS
+Severe acute respiratory syndrome-related coronavirus;Bat SARS CoV Rp3/2004	SARS
+Severe acute respiratory syndrome-related coronavirus;Bat SARS-like coronavirus RsSHC014	SARS
+Severe acute respiratory syndrome-related coronavirus;Bat SARS-like coronavirus YNLF_31C	SARS
+Severe acute respiratory syndrome-related coronavirus;BtRf-BetaCoV/JL2012	SARS
+Severe acute respiratory syndrome-related coronavirus;BtRs-BetaCoV/GX2013	SARS
+Severe acute respiratory syndrome-related coronavirus;BtRs-BetaCoV/HuB2013	SARS
+Severe acute respiratory syndrome-related coronavirus;SARS coronavirus LLJ-2004	SARS
+Severe acute respiratory syndrome-related coronavirus;SARS coronavirus Rs_672/2006	SARS
