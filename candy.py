@@ -621,9 +621,9 @@ def check_dependencies():
 			except subprocess.CalledProcessError as blastDBerror:
 				sys.stderr.write("Make sure nt_v5 is downloaded and the ennvironmental variable 'BLASTDB' is set to the directory containing nt_v5.\n")
 				sys.exit()
-			taxonomy_cmd = f'curl -s -L https://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
+			taxonomy_cmd = f'curl -s -L https://taxonomy.jgi-psf.org/sc/simple/header/KY171034.1'
 			header =  subprocess.check_output(taxonomy_cmd, shell=True,universal_newlines=True)
-			correct_header = 'sk:Viruses;p:Negarnaviricota;c:Insthoviricetes;o:Articulavirales;f:Orthomyxoviridae;g:Alphainfluenzavirus;s:Influenza A virus;H1N1 subtype;Influenza A virus (A/Chennai/05/2009(H1N1))'
+			correct_header = 'sk:Viruses;p:Negarnaviricota;c:Insthoviricetes;o:Articulavirales;f:Orthomyxoviridae;g:Alphainfluenzavirus;s:Influenza A virus;H5N1 subtype;Influenza A virus (A/duck/Vietnam/R6-07-693/2013(H5N1))'
 			try:
 				header == correct_header
 			except ValueError:
