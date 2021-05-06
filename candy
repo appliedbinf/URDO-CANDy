@@ -122,7 +122,7 @@ def blast_primers(key):
 	"""
 	Input: primer_dict keys [*_primer.fasta, *_taxid.txt]
 	Output: file of blast results for each primer [*_blast.results]
-	Description: Takes the primer fasta files and taxid lists and BLASTs primers against taxa specific sequences in nt_v5 database, output is sorted to make parsing easier
+	Description: Takes the primer fasta files and taxid lists and BLASTs primers against taxa specific sequences in nt database, output is sorted to make parsing easier
 	Checks: None
 	"""
 	logging.debug("\tPROCESS: Starting primer BLAST")
@@ -131,7 +131,7 @@ def blast_primers(key):
 	if os.path.exists(f"{primer_name}_blast.results") and os.path.isfile(f"{primer_name}_blast.results"):
 		os.remove(f"{primer_name}_blast.results")
 	try:
-		blast_cmd = f"blastn -query {primer_name}_primers.fasta -db nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out {primer_name}_blast.results"
+		blast_cmd = f"blastn -query {primer_name}_primers.fasta -db nt -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out {primer_name}_blast.results"
 		logging.debug(f"\tPROCESS: {blast_cmd}")
 		blast_pipes = subprocess.Popen(blast_cmd, shell=True,  stderr=subprocess.PIPE)
 		std_err = blast_pipes.communicate()
@@ -146,12 +146,12 @@ def extract_subsequence(genome, start, stop):
 	"""
 	Input: genome, start and stop of amplicons identified in BLAST parsing
 	Output: returns FASTA sequences to parse_blast_results
-	Descripton: Takes the gi accession number from Blast results and start and stop position and used blastdbcmd to extract seqeunce from nt_v5 database then replaces header with NCBI taxonomy using JGI http: query
+	Descripton: Takes the gi accession number from Blast results and start and stop position and used blastdbcmd to extract seqeunce from nt database then replaces header with NCBI taxonomy using JGI http: query
 	"""
 	thisStart = min(start, stop)
 	thisStop  = max(start, stop)
 
-	extract_cmd = f"blastdbcmd -db nt_v5 -entry {genome} -range {thisStart}-{thisStop}"
+	extract_cmd = f"blastdbcmd -db nt -entry {genome} -range {thisStart}-{thisStop}"
 	extract_seq = subprocess.check_output(extract_cmd, shell=True,universal_newlines=True)
 	header,seq = extract_seq.split('\n',1)
 	seq = seq.rstrip()
@@ -159,7 +159,7 @@ def extract_subsequence(genome, start, stop):
 		seq = rev_comp(seq)
 
 	taxonomy = re.split(">|:", header)[1]
-	taxonomy_cmd = f'curl -s http://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
+	taxonomy_cmd = f'curl -s -L https://taxonomy.jgi-psf.org/sc/simple/header/{taxonomy}'
 	header = ">"+ taxonomy +"|" + subprocess.check_output(taxonomy_cmd, shell=True,universal_newlines=True)
 	seq = re.sub(pattern="\n", string = seq, repl="")
 	return("{}\n{}\n".format(header,seq))
@@ -169,7 +169,7 @@ def parse_blast_results(key):
 	"""
 	Input: blast results [*_blast.results]
 	Output: extracted amplicons [*_amplicons.fasta]
-	Description: This fucntion parses the blast results and creates a results dictionary with the key being the matched genome which holds a list of forward and reverse coordinates, finds all forward and reverse pairs that fall within the parameters and uses the extract_seq command to pull the region from nt_v5. 
+	Description: This fucntion parses the blast results and creates a results dictionary with the key being the matched genome which holds a list of forward and reverse coordinates, finds all forward and reverse pairs that fall within the parameters and uses the extract_seq command to pull the region from nt. 
 	Checks: None
 	"""
 	#for each blast results file create a results dictionary, each entry is a genome hit
@@ -291,10 +291,15 @@ def derep_amplicons(primer_dict):
 		primer_name = re.sub(pattern = ' ', string = primer_dict[key]['primer_name'].rstrip(), repl='_')
 		amplicon_file = primer_name + "_amplicons.fasta"
 		derep_file = primer_name + "_derep_amplicons.fasta"
+		temp_file = "temp"
 		# comment the next line when you are actually running the program.  This is placed here for debugging purposes only
 		if os.path.exists(derep_file) and os.path.isfile(derep_file):
 			os.remove(derep_file)
-
+		#Change from sort_cmd = f"cat {amplicon_file} |paste - - |sort -r -k2 -t ':' |tr '\t' '\n' > {temp_file}"
+		#Change from sort_cmd = f"cat {amplicon_file} |paste - - |sed 's/|/ /' |sort -r -k2 |tr '\t' '\n' > {temp_file}"
+		sort_cmd = "cat {} |paste - - | awk 'BEGIN{{FS=\"\t\"; OFS=\"\t\"}} {{print length($1),$1,$2}}' | sort -k1nr | awk 'BEGIN{{FS=\"\t\"}}{{print $2\"\\n\"$3}}' > {}".format(amplicon_file,temp_file)
+		subprocess.call(sort_cmd, shell=True)
+		os.rename(temp_file, amplicon_file)
 		logging.debug(f"\tPROCESS: Dereplicating amplicons for: {primer_name}")
 		dereplicate_cmd = f"vsearch --derep_fulllength {amplicon_file} --strand both --fasta_width 0 --notrunclabels --output {derep_file}".split(" ")
 		subprocess.run(dereplicate_cmd, stderr=subprocess.DEVNULL)
@@ -324,6 +329,8 @@ def fix_headers(pimer_dict):
 					for line in in_file:
 						if line.startswith(">"):
 							#print(line.rstrip())
+							if "Not found" in line:
+								continue
 							line = line.split("s:",1)[1].rstrip()
 							#print(line)
 							if line in mapping_dict.keys():
@@ -344,6 +351,8 @@ def fix_headers(pimer_dict):
 				with open(derep_file, 'r') as in_file:                                
 					for line in in_file:
 						if line.startswith(">"):
+							if "Not found" in line:
+									continue
 							line = line.split("s:")[1]
 							out_file.write(">" + line)
 						else:
@@ -367,7 +376,7 @@ def create_smored_files(primer_dict):
 	fix_taxonomy_check_cmd = f"sed ':a;N;$!ba;s/\n[^>]/PLACEHOLDER/g' {taxonomy_check_file} |grep -v 'nnn' |sed 's/PLACEHOLDER/\n/' > {taxonomy_file}"
 	amplicon_dict = {}
 	if __use_output_prefix__ :
-		amplicon_file = OUTPUT_PREFIX + "_amplicons.fasta"
+		amplicon_file = OUTPUT_PREFIX + "_ampliconsFile.fasta"
 		profile_file = OUTPUT_PREFIX + "_profile.tsv"
 		config_file = OUTPUT_PREFIX + "_config.txt"
 	else:
@@ -469,6 +478,8 @@ def clean_up(primer_dict, org_dict):
 	else:
 		if os.path.isdir(OUTPUT_DIR):
 			shutil.rmtree(OUTPUT_DIR)
+		if os.path.isfile(OUTPUT_DIR):
+			os.remove(OUTPUT_DIR)
 		os.mkdir(OUTPUT_DIR)
 	logging.debug(f"\tPROCESS: Moving accessory file to {OUTPUT_DIR}")
 	for key in primer_dict:
@@ -511,12 +522,14 @@ def create_log_file(LOG):
 
 	"""
 	if __log__:
-		logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+		logging.basicConfig(filename=f"{LOG}.log", level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 		sys.stderr.write(f"\nWriting log file to: {LOG}\n")
+		logging.debug(f"Command: {' '.join(sys.argv)}")
 	else:
 		LOG=subprocess.check_output('date "+%Y%m%d_%H%M"',shell=True).decode('utf-8').rstrip() +'.log'
 		logging.basicConfig(filename=LOG, level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 		sys.stderr.write(f"\nWriting log file to: {LOG}\n")
+		logging.debug(f"Command: {' '.join(sys.argv)}")
 
 def check_arguments():
 	if __update_annotations__:
@@ -602,12 +615,20 @@ def check_dependencies():
 				print("BLAST version: Passed")
 			##Checks that the correct version of the BLAST database is installed
 			try:
-				blast_db_check_cmd = "blastdbcmd -info -db nt_v5"
+				blast_db_check_cmd = "blastdbcmd -info -db nt"
 				subprocess.check_output(blast_db_check_cmd, shell=True)
-				print("BLAST database nt_v5: Passed")
+				print("BLAST database nt: Passed")
 			except subprocess.CalledProcessError as blastDBerror:
-				sys.stderr.write("Make sure nt_v5 is downloaded and the ennvironmental variable 'BLASTDB' is set to the directory containing nt_v5.\n")
-				exit()
+				sys.stderr.write("Make sure nt is downloaded and the ennvironmental variable 'BLASTDB' is set to the directory containing nt v5.\n")
+				sys.exit()
+			taxonomy_cmd = f'curl -s -L https://taxonomy.jgi-psf.org/sc/simple/header/KY171034.1'
+			header =  subprocess.check_output(taxonomy_cmd, shell=True,universal_newlines=True)
+			correct_header = 'sk:Viruses;p:Negarnaviricota;c:Insthoviricetes;o:Articulavirales;f:Orthomyxoviridae;g:Alphainfluenzavirus;s:Influenza A virus;H5N1 subtype;Influenza A virus (A/duck/Vietnam/R6-07-693/2013(H5N1))'
+			try:
+				header == correct_header
+			except ValueError:
+				sys.stderr.write("JGI taxonomy server (https://taxonomy.jgi-psf.org/) is not responding. CANDY has stopped, please try again later")
+				sys.exit()
 ############################################################################################
 #Program execution starts here
 HELP = "To create a new database: \n\ncandy.py -i <primer table> [-o <prefix for output files>] [-d <directory for intermediate file>] [-g <additional presence/absence seqs>] [-a <additional characterization seqs>] [-t num threads] [-m <mapping file>] [-l <log file>]  \n\nTo update an existing profile file: \n\ncandy.py --update -p <profile file> -m <mapping file> \n\nUse candy -h  for more infomation\n\n"
