@@ -615,11 +615,11 @@ def check_dependencies():
 				print("BLAST version: Passed")
 			##Checks that the correct version of the BLAST database is installed
 			try:
-				blast_db_check_cmd = "blastdbcmd -info -db nt_v5"
+				blast_db_check_cmd = "blastdbcmd -info -db nt"
 				subprocess.check_output(blast_db_check_cmd, shell=True)
-				print("BLAST database nt_v5: Passed")
+				print("BLAST database nt: Passed")
 			except subprocess.CalledProcessError as blastDBerror:
-				sys.stderr.write("Make sure nt_v5 is downloaded and the ennvironmental variable 'BLASTDB' is set to the directory containing nt_v5.\n")
+				sys.stderr.write("Make sure nt is downloaded and the ennvironmental variable 'BLASTDB' is set to the directory containing nt v5.\n")
 				sys.exit()
 			taxonomy_cmd = f'curl -s -L https://taxonomy.jgi-psf.org/sc/simple/header/KY171034.1'
 			header =  subprocess.check_output(taxonomy_cmd, shell=True,universal_newlines=True)
