@@ -122,7 +122,7 @@ def blast_primers(key):
 	"""
 	Input: primer_dict keys [*_primer.fasta, *_taxid.txt]
 	Output: file of blast results for each primer [*_blast.results]
-	Description: Takes the primer fasta files and taxid lists and BLASTs primers against taxa specific sequences in nt_v5 database, output is sorted to make parsing easier
+	Description: Takes the primer fasta files and taxid lists and BLASTs primers against taxa specific sequences in nt database, output is sorted to make parsing easier
 	Checks: None
 	"""
 	logging.debug("\tPROCESS: Starting primer BLAST")
@@ -131,7 +131,7 @@ def blast_primers(key):
 	if os.path.exists(f"{primer_name}_blast.results") and os.path.isfile(f"{primer_name}_blast.results"):
 		os.remove(f"{primer_name}_blast.results")
 	try:
-		blast_cmd = f"blastn -query {primer_name}_primers.fasta -db nt_v5 -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out {primer_name}_blast.results"
+		blast_cmd = f"blastn -query {primer_name}_primers.fasta -db nt -taxidlist {primer_dict[key]['taxid'].replace(',','.')}_taxid.txt -outfmt '6 qseqid sseqid qlen slen length pident mismatch gaps gapopen evalue bitscore qstart qend sstart send sstrand' -word_size 7 -evalue 500000 -max_target_seqs 20000 -num_threads 10 -out {primer_name}_blast.results"
 		logging.debug(f"\tPROCESS: {blast_cmd}")
 		blast_pipes = subprocess.Popen(blast_cmd, shell=True,  stderr=subprocess.PIPE)
 		std_err = blast_pipes.communicate()
@@ -146,12 +146,12 @@ def extract_subsequence(genome, start, stop):
 	"""
 	Input: genome, start and stop of amplicons identified in BLAST parsing
 	Output: returns FASTA sequences to parse_blast_results
-	Descripton: Takes the gi accession number from Blast results and start and stop position and used blastdbcmd to extract seqeunce from nt_v5 database then replaces header with NCBI taxonomy using JGI http: query
+	Descripton: Takes the gi accession number from Blast results and start and stop position and used blastdbcmd to extract seqeunce from nt database then replaces header with NCBI taxonomy using JGI http: query
 	"""
 	thisStart = min(start, stop)
 	thisStop  = max(start, stop)
 
-	extract_cmd = f"blastdbcmd -db nt_v5 -entry {genome} -range {thisStart}-{thisStop}"
+	extract_cmd = f"blastdbcmd -db nt -entry {genome} -range {thisStart}-{thisStop}"
 	extract_seq = subprocess.check_output(extract_cmd, shell=True,universal_newlines=True)
 	header,seq = extract_seq.split('\n',1)
 	seq = seq.rstrip()
@@ -169,7 +169,7 @@ def parse_blast_results(key):
 	"""
 	Input: blast results [*_blast.results]
 	Output: extracted amplicons [*_amplicons.fasta]
-	Description: This fucntion parses the blast results and creates a results dictionary with the key being the matched genome which holds a list of forward and reverse coordinates, finds all forward and reverse pairs that fall within the parameters and uses the extract_seq command to pull the region from nt_v5. 
+	Description: This fucntion parses the blast results and creates a results dictionary with the key being the matched genome which holds a list of forward and reverse coordinates, finds all forward and reverse pairs that fall within the parameters and uses the extract_seq command to pull the region from nt. 
 	Checks: None
 	"""
 	#for each blast results file create a results dictionary, each entry is a genome hit
